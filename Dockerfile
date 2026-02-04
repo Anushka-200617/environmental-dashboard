@@ -17,7 +17,7 @@ COPY requirements.txt .
 RUN pip install --no-cache-dir -r requirements.txt
 
 # Copy application files
-COPY app_fixed_map.py app.py
+COPY app.py app.py
 COPY templates/ templates/
 COPY pune_environmental_data.csv .
 

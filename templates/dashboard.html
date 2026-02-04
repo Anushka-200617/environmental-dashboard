@@ -1,0 +1,320 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Environmental Dashboard - Pune</title>
+    <script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: 'Poppins', sans-serif; background: #f5f7fa; color: #2c3e50; }
+        .navbar { background: linear-gradient(135deg, #2c3e50, #34495e); color: white; padding: 1.5rem 2rem; }
+        .navbar h1 { font-size: 1.8rem; font-weight: 700; }
+        .container { max-width: 1600px; margin: 0 auto; padding: 2rem; }
+        h2 { font-size: 1.5rem; margin: 2rem 0 1.5rem 0; font-weight: 700; }
+        .grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 1.5rem; margin-bottom: 2rem; }
+        .card { background: white; padding: 1.5rem; border-radius: 8px; box-shadow: 0 2px 8px rgba(0,0,0,0.1); border-left: 4px solid; }
+        .card.high { border-left-color: #e74c3c; }
+        .card.medium { border-left-color: #f39c12; }
+        .card.low { border-left-color: #2ecc71; }
+        .card.info { border-left-color: #3498db; }
+        .stat-label { font-size: 0.75rem; color: #7f8c8d; text-transform: uppercase; font-weight: 600; margin-bottom: 0.5rem; letter-spacing: 0.5px; }
+        .stat-value { font-size: 3rem; font-weight: 700; color: #2c3e50; line-height: 1; }
+        .stat-unit { font-size: 0.8rem; color: #7f8c8d; margin-top: 0.3rem; }
+        .tabs { display: flex; gap: 1rem; margin: 2rem 0 1.5rem 0; border-bottom: 2px solid #ecf0f1; flex-wrap: wrap; }
+        .tab-btn { padding: 1rem 1.5rem; border: none; background: none; cursor: pointer; font-weight: 600; color: #95a5a6; border-bottom: 3px solid transparent; transition: 0.3s; }
+        .tab-btn.active { color: #e74c3c; border-bottom-color: #e74c3c; }
+        .tab-content { display: none; }
+        .tab-content.active { display: block; }
+        .charts-container { display: grid; grid-template-columns: repeat(2, 1fr); gap: 2rem; margin-bottom: 2rem; }
+        .chart-box { background: white; padding: 1.5rem; border-radius: 8px; box-shadow: 0 2px 12px rgba(0,0,0,0.1); }
+        .chart-title { font-size: 1.2rem; font-weight: 700; margin-bottom: 1rem; color: #2c3e50; }
+        .chart-title i { color: #e74c3c; margin-right: 0.5rem; }
+        .insights-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 1.5rem; margin-bottom: 2rem; }
+        .insight-card { background: white; padding: 1.5rem; border-radius: 8px; box-shadow: 0 2px 8px rgba(0,0,0,0.1); border-left: 4px solid; transition: transform 0.3s; }
+        .insight-card:hover { transform: translateY(-5px); }
+        .insight-icon { font-size: 2.5rem; margin-bottom: 0.5rem; }
+        .insight-title { font-weight: 700; color: #2c3e50; margin-bottom: 0.5rem; }
+        .insight-text { color: #7f8c8d; font-size: 0.9rem; margin-bottom: 0.5rem; }
+        .insight-action { font-size: 0.85rem; font-weight: 600; }
+        #map-container { background: white; border-radius: 8px; box-shadow: 0 2px 8px rgba(0,0,0,0.1); height: 900px; overflow: hidden; }
+        .table-container { background: white; border-radius: 8px; box-shadow: 0 2px 8px rgba(0,0,0,0.1); overflow-x: auto; margin-bottom: 2rem; }
+        table { width: 100%; border-collapse: collapse; font-size: 0.9rem; }
+        thead { background: #2c3e50; color: white; }
+        th { padding: 1rem; text-align: left; font-weight: 600; }
+        td { padding: 0.8rem 1rem; border-bottom: 1px solid #ecf0f1; }
+        tbody tr:hover { background: #f8f9fa; }
+        .badge { padding: 0.3rem 0.8rem; border-radius: 20px; font-size: 0.75rem; font-weight: 600; }
+        .badge-high { background: rgba(231, 76, 60, 0.2); color: #e74c3c; }
+        .badge-medium { background: rgba(243, 156, 18, 0.2); color: #f39c12; }
+        .badge-low { background: rgba(46, 204, 113, 0.2); color: #2ecc71; }
+        .faq-container { background: white; border-radius: 8px; box-shadow: 0 2px 8px rgba(0,0,0,0.1); padding: 1.5rem; }
+        .faq-item { border-bottom: 1px solid #ecf0f1; padding: 1rem 0; }
+        .faq-item:last-child { border-bottom: none; }
+        .faq-item summary { cursor: pointer; font-weight: 600; color: #2c3e50; }
+        .faq-item summary:hover { color: #e74c3c; }
+        .faq-item p { padding: 1rem 0 0 0; color: #7f8c8d; line-height: 1.6; white-space: pre-wrap; }
+        .footer { background: #1a252f; color: white; padding: 2rem; text-align: center; margin-top: 3rem; font-size: 0.85rem; }
+        @media (max-width: 1200px) { .charts-container { grid-template-columns: 1fr; } }
+    </style>
+</head>
+<body>
+    <div class="navbar">
+        <h1><i class="fas fa-leaf"></i> Environmental Inequality Dashboard</h1>
+    </div>
+    
+    <div class="container">
+        <!-- OVERVIEW SECTION -->
+        <h2> Overview</h2>
+        <div class="grid">
+            <div class="card info">
+                <div class="stat-label">Total Wards</div>
+                <div class="stat-value" id="total-wards">-</div>
+            </div>
+            <div class="card high">
+                <div class="stat-label">🔴 High Stress</div>
+                <div class="stat-value" id="high-stress">-</div>
+            </div>
+            <div class="card medium">
+                <div class="stat-label">🟠 Medium Stress</div>
+                <div class="stat-value" id="medium-stress">-</div>
+            </div>
+            <div class="card low">
+                <div class="stat-label">🟢 Low Stress</div>
+                <div class="stat-value" id="low-stress">-</div>
+            </div>
+            <div class="card">
+                <div class="stat-label">Avg PM2.5</div>
+                <div class="stat-value" id="avg-pm25">-</div>
+                <div class="stat-unit">µg/m³</div>
+            </div>
+            <div class="card">
+                <div class="stat-label">Avg ESI</div>
+                <div class="stat-value" id="avg-esi">-</div>
+                <div class="stat-unit">0-1 scale</div>
+            </div>
+        </div>
+        
+        <!-- KEY INSIGHTS SECTION -->
+        <h2> Key Insights</h2>
+        <div class="insights-grid" id="insights-container"></div>
+        
+        <!-- TABS -->
+        <div class="tabs">
+            <button class="tab-btn active" onclick="showTab(event, 'charts')"><i class="fas fa-chart-pie"></i> Charts</button>
+            <button class="tab-btn" onclick="showTab(event, 'map')"><i class="fas fa-map-marked-alt"></i> Map</button>
+            <button class="tab-btn" onclick="showTab(event, 'data')"><i class="fas fa-table"></i> Data</button>
+            <button class="tab-btn" onclick="showTab(event, 'faq')"><i class="fas fa-question-circle"></i> FAQ</button>
+        </div>
+        
+        <!-- CHARTS TAB -->
+        <div id="charts" class="tab-content active">
+            <div class="charts-container">
+                <div class="chart-box">
+                    <div class="chart-title"><i class="fas fa-chart-pie"></i> Stress Distribution</div>
+                    <div id="stress-chart" style="height: 450px;"></div>
+                </div>
+                <div class="chart-box">
+                    <div class="chart-title"><i class="fas fa-tree"></i> PM2.5 vs Green Cover</div>
+                    <div id="pm25-chart" style="height: 450px;"></div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- MAP TAB -->
+        <div id="map" class="tab-content">
+            <div style="background: white; padding: 1.5rem; border-radius: 8px; box-shadow: 0 2px 8px rgba(0,0,0,0.1);">
+                <div class="chart-title"><i class="fas fa-map-marked-alt"></i> Interactive Map</div>
+                <div id="map-container"></div>
+            </div>
+        </div>
+        
+        <!-- DATA TAB -->
+        <div id="data" class="tab-content">
+            <div class="table-container">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Ward</th>
+                            <th>Stress Zone</th>
+                            <th>PM2.5</th>
+                            <th>Heat</th>
+                            <th>Green Cover</th>
+                            <th>ESI</th>
+                        </tr>
+                    </thead>
+                    <tbody id="ward-tbody"></tbody>
+                </table>
+            </div>
+        </div>
+        
+        <!-- FAQ TAB -->
+        <div id="faq" class="tab-content">
+            <div class="faq-container">
+                <h3 style="margin-bottom: 1.5rem; color: #2c3e50;">❓ FAQ</h3>
+                <div id="faq-container"></div>
+            </div>
+        </div>
+    </div>
+    
+    <div class="footer">
+        <p>Environmental Inequality Dashboard </p>
+    </div>
+    
+    <script>
+        console.log('🚀 Dashboard loading...');
+        
+        document.addEventListener('DOMContentLoaded', () => {
+            console.log('📄 DOM loaded - fetching data...');
+            loadOverview();
+            loadInsights();
+            loadCharts();
+            loadMap();
+            loadTable();
+            loadFAQ();
+        });
+        
+        function loadOverview() {
+            console.log('📊 Calling /api/overview...');
+            fetch('/api/overview')
+                .then(r => {
+                    console.log('Response status:', r.status);
+                    return r.json();
+                })
+                .then(data => {
+                    console.log('✅ Overview data:', data);
+                    
+                    document.getElementById('total-wards').textContent = data.total_wards || 0;
+                    document.getElementById('high-stress').textContent = data.high_stress_count || 0;
+                    document.getElementById('medium-stress').textContent = data.medium_stress_count || 0;
+                    document.getElementById('low-stress').textContent = data.low_stress_count || 0;
+                    document.getElementById('avg-pm25').textContent = (data.avg_pm25 || 0).toFixed(1);
+                    document.getElementById('avg-esi').textContent = (data.avg_esi || 0).toFixed(3);
+                })
+                .catch(e => console.error('❌ Overview error:', e));
+        }
+        
+        function loadInsights() {
+            console.log('💡 Calling /api/insights...');
+            fetch('/api/insights')
+                .then(r => r.json())
+                .then(insights => {
+                    console.log('✅ Insights:', insights);
+                    const container = document.getElementById('insights-container');
+                    container.innerHTML = '';
+                    
+                    const colors = {
+                        'critical': '#e74c3c',
+                        'pollution': '#f39c12',
+                        'green': '#2ecc71',
+                        'population': '#3498db',
+                        'budget': '#9b59b6'
+                    };
+                    
+                    insights.forEach(insight => {
+                        const card = document.createElement('div');
+                        card.className = 'insight-card';
+                        card.style.borderLeftColor = colors[insight.type] || '#95a5a6';
+                        card.innerHTML = `
+                            <div class="insight-icon">${insight.icon}</div>
+                            <div class="insight-title">${insight.title}</div>
+                            <div class="insight-text">${insight.text}</div>
+                            <div class="insight-action" style="color: ${colors[insight.type]}">${insight.action}</div>
+                        `;
+                        container.appendChild(card);
+                    });
+                })
+                .catch(e => console.error('❌ Insights error:', e));
+        }
+        
+        function loadCharts() {
+            console.log('📈 Loading charts...');
+            
+            fetch('/api/stress-distribution')
+                .then(r => r.json())
+                .then(data => {
+                    console.log('✅ Stress chart ready');
+                    Plotly.newPlot('stress-chart', data.data, data.layout, {responsive: true});
+                })
+                .catch(e => console.error('❌ Stress chart error:', e));
+            
+            fetch('/api/pm25-green')
+                .then(r => r.json())
+                .then(data => {
+                    console.log('✅ PM2.5 chart ready');
+                    Plotly.newPlot('pm25-chart', data.data, data.layout, {responsive: true});
+                })
+                .catch(e => console.error('❌ PM2.5 chart error:', e));
+        }
+        
+        function loadMap() {
+            console.log('🗺️ Loading map...');
+            fetch('/api/map')
+                .then(r => r.text())
+                .then(html => {
+                    console.log('✅ Map loaded');
+                    document.getElementById('map-container').innerHTML = html;
+                })
+                .catch(e => console.error('❌ Map error:', e));
+        }
+        
+        function loadTable() {
+            console.log('📋 Loading table...');
+            fetch('/api/wards')
+                .then(r => r.json())
+                .then(data => {
+                    console.log('✅ Table data:', data.length, 'wards');
+                    const tbody = document.getElementById('ward-tbody');
+                    tbody.innerHTML = '';
+                    
+                    data.forEach(ward => {
+                        const badgeClass = `badge-${ward.stress_zone.toLowerCase().split(' ')[0]}`;
+                        tbody.innerHTML += `
+                            <tr>
+                                <td><strong>${ward.ward}</strong></td>
+                                <td><span class="badge ${badgeClass}">${ward.stress_zone}</span></td>
+                                <td>${ward.pm25.toFixed(1)}</td>
+                                <td>${ward.heat.toFixed(1)}</td>
+                                <td>${(ward.green_cover * 100).toFixed(1)}%</td>
+                                <td>${ward.esi.toFixed(3)}</td>
+                            </tr>
+                        `;
+                    });
+                })
+                .catch(e => console.error('❌ Table error:', e));
+        }
+        
+        function loadFAQ() {
+            console.log('❓ Loading FAQ...');
+            fetch('/api/faq')
+                .then(r => r.json())
+                .then(faq => {
+                    console.log('✅ FAQ loaded');
+                    const container = document.getElementById('faq-container');
+                    container.innerHTML = '';
+                    
+                    faq.forEach(item => {
+                        const details = document.createElement('details');
+                        details.className = 'faq-item';
+                        details.innerHTML = `
+                            <summary>${item.question}</summary>
+                            <p>${item.answer}</p>
+                        `;
+                        container.appendChild(details);
+                    });
+                })
+                .catch(e => console.error('❌ FAQ error:', e));
+        }
+        
+        function showTab(event, tabName) {
+            document.querySelectorAll('.tab-content').forEach(t => t.classList.remove('active'));
+            document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+            document.getElementById(tabName).classList.add('active');
+            event.currentTarget.classList.add('active');
+        }
+    </script>
+</body>
+</html>

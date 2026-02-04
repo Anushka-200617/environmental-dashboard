@@ -1,0 +1,13 @@
+services:
+  - type: web
+    name: environmental-dashboard
+    env: docker
+    plan: free
+    region: oregon
+    branch: main
+    dockerfile: ./Dockerfile
+    envVars:
+      - key: PYTHON_VERSION
+        value: 3.9
+      - key: FLASK_ENV
+        value: production

@@ -1,0 +1,1552 @@
+<!DOCTYPE html>
+<html>
+<head>
+    
+    <meta http-equiv="content-type" content="text/html; charset=UTF-8" />
+    <script src="https://cdn.jsdelivr.net/npm/leaflet@1.9.3/dist/leaflet.js"></script>
+    <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.2/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Leaflet.awesome-markers/2.0.2/leaflet.awesome-markers.js"></script>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/leaflet@1.9.3/dist/leaflet.css"/>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.2/dist/css/bootstrap.min.css"/>
+    <link rel="stylesheet" href="https://netdna.bootstrapcdn.com/bootstrap/3.0.0/css/bootstrap-glyphicons.css"/>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.2.0/css/all.min.css"/>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/Leaflet.awesome-markers/2.0.2/leaflet.awesome-markers.css"/>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/python-visualization/folium/folium/templates/leaflet.awesome.rotate.min.css"/>
+    
+            <meta name="viewport" content="width=device-width,
+                initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+            <style>
+                #map_d561194b256c254ed5cbe7e2f95dbad2 {
+                    position: relative;
+                    width: 100.0%;
+                    height: 100.0%;
+                    left: 0.0%;
+                    top: 0.0%;
+                }
+                .leaflet-container { font-size: 1rem; }
+            </style>
+
+            <style>html, body {
+                width: 100%;
+                height: 100%;
+                margin: 0;
+                padding: 0;
+            }
+            </style>
+
+            <style>#map {
+                position:absolute;
+                top:0;
+                bottom:0;
+                right:0;
+                left:0;
+                }
+            </style>
+
+            <script>
+                L_NO_TOUCH = false;
+                L_DISABLE_3D = false;
+            </script>
+
+        
+</head>
+<body>
+    
+    
+    <div style="position: fixed; 
+                bottom: 50px; right: 50px; width: 320px; height: auto; 
+                background-color: white; border:3px solid #333; z-index:9999; 
+                font-size:13px; padding: 15px; border-radius: 8px; box-shadow: 0 0 15px rgba(0,0,0,0.2);">
+    
+    <p style="margin: 0; font-weight: bold; border-bottom: 3px solid #333; padding-bottom: 8px; font-size: 15px;">
+    🗺️ PUNE DISTRICT - ENVIRONMENTAL STRESS ZONES</p>
+    
+    <p style="margin: 10px 0 5px 0; font-weight: bold; font-size: 12px; color: #666;">STRESS LEVELS:</p>
+    <p style="margin: 3px 0;"><i style="background:#e74c3c;width:18px;height:18px;display:inline-block;border-radius:50%;"></i> 
+    <span style="font-weight: bold;">High Stress</span> - Immediate Intervention (ESI > 0.65)</p>
+    <p style="margin: 3px 0;"><i style="background:#f39c12;width:18px;height:18px;display:inline-block;border-radius:50%;"></i> 
+    <span style="font-weight: bold;">Medium Stress</span> - Preventive Measures (ESI 0.45-0.65)</p>
+    <p style="margin: 3px 0;"><i style="background:#2ecc71;width:18px;height:18px;display:inline-block;border-radius:50%;"></i> 
+    <span style="font-weight: bold;">Low Stress</span> - Maintenance Only (ESI < 0.45)</p>
+    
+    <p style="margin: 10px 0 5px 0; font-weight: bold; font-size: 12px; color: #666;">CIRCLE SIZE:</p>
+    <p style="margin: 3px 0; font-size: 11px;">Larger circles = Higher ESI (more stressed)</p>
+    <p style="margin: 3px 0; font-size: 11px;">Smaller circles = Lower ESI (healthier)</p>
+    
+    <p style="margin: 10px 0 5px 0; font-weight: bold; font-size: 12px; color: #666;">INTERACTIONS:</p>
+    <p style="margin: 3px 0; font-size: 11px;">Click circles for detailed ward information</p>
+    <p style="margin: 3px 0; font-size: 11px;">Hover for quick preview of ward name & ESI</p>
+    
+    <p style="margin: 10px 0 5px 0; font-weight: bold; font-size: 12px; color: #666;">KEY INFO PER WARD:</p>
+    <p style="margin: 3px 0; font-size: 11px;">
+    ✓ Environmental data (PM2.5, heat, green cover)<br>
+    ✓ Population & location details<br>
+    ✓ 3-year budget allocation<br>
+    ✓ Distance from city center
+    </p>
+    
+    <p style="margin: 10px 0 0 0; padding-top: 8px; border-top: 2px solid #eee; font-size: 10px; color: #999;">
+    <b>Note:</b> District map shows 41 wards across Pune district territory</p>
+    </div>
+    
+    
+            <div class="folium-map" id="map_d561194b256c254ed5cbe7e2f95dbad2" ></div>
+        
+</body>
+<script>
+    
+    
+            var map_d561194b256c254ed5cbe7e2f95dbad2 = L.map(
+                "map_d561194b256c254ed5cbe7e2f95dbad2",
+                {
+                    center: [18.52, 73.85],
+                    crs: L.CRS.EPSG3857,
+                    ...{
+  "zoom": 10,
+  "zoomControl": true,
+  "preferCanvas": false,
+}
+
+                }
+            );
+
+            
+
+        
+    
+            var tile_layer_8894cad33f9ea4605f3652560eb78d76 = L.tileLayer(
+                "https://tile.openstreetmap.org/{z}/{x}/{y}.png",
+                {
+  "minZoom": 0,
+  "maxZoom": 19,
+  "maxNativeZoom": 19,
+  "noWrap": false,
+  "attribution": "\u0026copy; \u003ca href=\"https://www.openstreetmap.org/copyright\"\u003eOpenStreetMap\u003c/a\u003e contributors",
+  "subdomains": "abc",
+  "detectRetina": false,
+  "tms": false,
+  "opacity": 1,
+}
+
+            );
+        
+    
+            tile_layer_8894cad33f9ea4605f3652560eb78d76.addTo(map_d561194b256c254ed5cbe7e2f95dbad2);
+        
+    
+            var poly_line_1d347a4c7221c8f1f03fdac9a56706e4 = L.polyline(
+                [[19.2, 73.5], [19.2, 75.0], [17.5, 75.0], [17.5, 73.5], [19.2, 73.5]],
+                {"bubblingMouseEvents": true, "color": "black", "dashArray": null, "dashOffset": null, "fill": false, "fillColor": "black", "fillOpacity": 0.2, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "noClip": false, "opacity": 0.3, "smoothFactor": 1.0, "stroke": true, "weight": 2}
+            ).addTo(map_d561194b256c254ed5cbe7e2f95dbad2);
+        
+    
+        var popup_3ba94693dbe3652f5037411e6a8dc5ca = L.popup({
+  "maxWidth": "100%",
+});
+
+        
+            
+                var html_33e86390d8088aaa1c4964299fcc6fd9 = $(`<div id="html_33e86390d8088aaa1c4964299fcc6fd9" style="width: 100.0%; height: 100.0%;">Pune District Boundary (Approximate)</div>`)[0];
+                popup_3ba94693dbe3652f5037411e6a8dc5ca.setContent(html_33e86390d8088aaa1c4964299fcc6fd9);
+            
+        
+
+        poly_line_1d347a4c7221c8f1f03fdac9a56706e4.bindPopup(popup_3ba94693dbe3652f5037411e6a8dc5ca)
+        ;
+
+        
+    
+    
+            var circle_marker_ece7d2a924a7a4dd22e2ded2b461bfb1 = L.circleMarker(
+                [18.52, 73.856],
+                {"bubblingMouseEvents": true, "color": "#f39c12", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#f39c12", "fillOpacity": 0.8, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 0.9, "radius": 22.066325232097615, "stroke": true, "weight": 2}
+            ).addTo(map_d561194b256c254ed5cbe7e2f95dbad2);
+        
+    
+        var popup_4eefaa57b42dd3c1ec9f57a85b4b2da5 = L.popup({
+  "maxWidth": 400,
+});
+
+        
+            
+                var html_fc75acca9920a8cc5b3b1c2de2ff23da = $(`<div id="html_fc75acca9920a8cc5b3b1c2de2ff23da" style="width: 100.0%; height: 100.0%;">         <div style="font-family: Arial; width: 350px;">         <h4 style="margin: 0 0 10px 0;">Ward_1 - Pune City Center</h4>         <hr style="margin: 5px 0;">         <b>Stress Assessment:</b><br>         Stress Zone: <span style="color: #f39c12; font-weight: bold;">Medium Stress</span><br>         ESI Score: <b>0.703</b> (0-1 scale)<br>         <hr style="margin: 5px 0;">                  <b>Environmental Indicators:</b><br>         PM2.5: <b>84.9</b> µg/m³ (WHO limit: 35)<br>         Temperature: <b>31.5</b>°C<br>         Population Density: <b>7594</b> persons/km²<br>         Green Cover: <b>4.3%</b><br>         Vulnerable Population: <b>42.6%</b><br>         <hr style="margin: 5px 0;">                  <b>Geographic Location:</b><br>         Area: <b>Pune City Center</b><br>         Population: <b>58,000</b><br>         Distance from City Center: <b>0.5 km</b><br>         Coordinates: (18.5200°N, 73.8560°E)<br>         <hr style="margin: 5px 0;">                  <b>Budget Allocation (3 Years):</b><br>         <span style="background: #e8f5e9; padding: 8px; display: block; margin: 5px 0; border-radius: 3px;">         Total: <b>₹13.97 Lakhs</b><br>         <span style="font-size: 0.9em;">         • Green Infrastructure: ₹4.89L<br>         • Pollution Control: ₹4.19L<br>         • Health Monitoring: ₹2.79L<br>         • Research: ₹2.10L         </span>         </span>         </div>         </div>`)[0];
+                popup_4eefaa57b42dd3c1ec9f57a85b4b2da5.setContent(html_fc75acca9920a8cc5b3b1c2de2ff23da);
+            
+        
+
+        circle_marker_ece7d2a924a7a4dd22e2ded2b461bfb1.bindPopup(popup_4eefaa57b42dd3c1ec9f57a85b4b2da5)
+        ;
+
+        
+    
+    
+            circle_marker_ece7d2a924a7a4dd22e2ded2b461bfb1.bindTooltip(
+                `<div>
+                     Ward_1 (Medium Stress, ESI: 0.703)
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+            var circle_marker_e9af8d0d301f56162a19bbabc15ca923 = L.circleMarker(
+                [18.555, 73.88],
+                {"bubblingMouseEvents": true, "color": "#e74c3c", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#e74c3c", "fillOpacity": 0.8, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 0.9, "radius": 20.6039900494043, "stroke": true, "weight": 2}
+            ).addTo(map_d561194b256c254ed5cbe7e2f95dbad2);
+        
+    
+        var popup_ba8e2f130ee65779449252ea5afed9fc = L.popup({
+  "maxWidth": 400,
+});
+
+        
+            
+                var html_15866d7aa730c3427196bd4deeee014e = $(`<div id="html_15866d7aa730c3427196bd4deeee014e" style="width: 100.0%; height: 100.0%;">         <div style="font-family: Arial; width: 350px;">         <h4 style="margin: 0 0 10px 0;">Ward_2 - Viman Nagar</h4>         <hr style="margin: 5px 0;">         <b>Stress Assessment:</b><br>         Stress Zone: <span style="color: #e74c3c; font-weight: bold;">High Stress</span><br>         ESI Score: <b>0.630</b> (0-1 scale)<br>         <hr style="margin: 5px 0;">                  <b>Environmental Indicators:</b><br>         PM2.5: <b>72.2</b> µg/m³ (WHO limit: 35)<br>         Temperature: <b>27.5</b>°C<br>         Population Density: <b>14554</b> persons/km²<br>         Green Cover: <b>11.6%</b><br>         Vulnerable Population: <b>39.8%</b><br>         <hr style="margin: 5px 0;">                  <b>Geographic Location:</b><br>         Area: <b>Viman Nagar</b><br>         Population: <b>110,000</b><br>         Distance from City Center: <b>4.2 km</b><br>         Coordinates: (18.5550°N, 73.8800°E)<br>         <hr style="margin: 5px 0;">                  <b>Budget Allocation (3 Years):</b><br>         <span style="background: #e8f5e9; padding: 8px; display: block; margin: 5px 0; border-radius: 3px;">         Total: <b>₹46.59 Lakhs</b><br>         <span style="font-size: 0.9em;">         • Green Infrastructure: ₹18.64L<br>         • Pollution Control: ₹16.31L<br>         • Health Monitoring: ₹6.99L<br>         • Research: ₹4.66L         </span>         </span>         </div>         </div>`)[0];
+                popup_ba8e2f130ee65779449252ea5afed9fc.setContent(html_15866d7aa730c3427196bd4deeee014e);
+            
+        
+
+        circle_marker_e9af8d0d301f56162a19bbabc15ca923.bindPopup(popup_ba8e2f130ee65779449252ea5afed9fc)
+        ;
+
+        
+    
+    
+            circle_marker_e9af8d0d301f56162a19bbabc15ca923.bindTooltip(
+                `<div>
+                     Ward_2 (High Stress, ESI: 0.630)
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+            var circle_marker_887ad389f8bd164f9bd3bf140e3ccab8 = L.circleMarker(
+                [18.515, 73.91],
+                {"bubblingMouseEvents": true, "color": "#e74c3c", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#e74c3c", "fillOpacity": 0.8, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 0.9, "radius": 22.45304280228645, "stroke": true, "weight": 2}
+            ).addTo(map_d561194b256c254ed5cbe7e2f95dbad2);
+        
+    
+        var popup_625b1a04ba9f66b3ebcd0a6b0fb26598 = L.popup({
+  "maxWidth": 400,
+});
+
+        
+            
+                var html_2bc5d0a01e11c26df878e085683cd808 = $(`<div id="html_2bc5d0a01e11c26df878e085683cd808" style="width: 100.0%; height: 100.0%;">         <div style="font-family: Arial; width: 350px;">         <h4 style="margin: 0 0 10px 0;">Ward_3 - Kharadi</h4>         <hr style="margin: 5px 0;">         <b>Stress Assessment:</b><br>         Stress Zone: <span style="color: #e74c3c; font-weight: bold;">High Stress</span><br>         ESI Score: <b>0.723</b> (0-1 scale)<br>         <hr style="margin: 5px 0;">                  <b>Environmental Indicators:</b><br>         PM2.5: <b>88.0</b> µg/m³ (WHO limit: 35)<br>         Temperature: <b>26.9</b>°C<br>         Population Density: <b>18500</b> persons/km²<br>         Green Cover: <b>11.6%</b><br>         Vulnerable Population: <b>40.3%</b><br>         <hr style="margin: 5px 0;">                  <b>Geographic Location:</b><br>         Area: <b>Kharadi</b><br>         Population: <b>140,000</b><br>         Distance from City Center: <b>6.8 km</b><br>         Coordinates: (18.5150°N, 73.9100°E)<br>         <hr style="margin: 5px 0;">                  <b>Budget Allocation (3 Years):</b><br>         <span style="background: #e8f5e9; padding: 8px; display: block; margin: 5px 0; border-radius: 3px;">         Total: <b>₹70.63 Lakhs</b><br>         <span style="font-size: 0.9em;">         • Green Infrastructure: ₹28.25L<br>         • Pollution Control: ₹24.72L<br>         • Health Monitoring: ₹10.59L<br>         • Research: ₹7.06L         </span>         </span>         </div>         </div>`)[0];
+                popup_625b1a04ba9f66b3ebcd0a6b0fb26598.setContent(html_2bc5d0a01e11c26df878e085683cd808);
+            
+        
+
+        circle_marker_887ad389f8bd164f9bd3bf140e3ccab8.bindPopup(popup_625b1a04ba9f66b3ebcd0a6b0fb26598)
+        ;
+
+        
+    
+    
+            circle_marker_887ad389f8bd164f9bd3bf140e3ccab8.bindTooltip(
+                `<div>
+                     Ward_3 (High Stress, ESI: 0.723)
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+            var circle_marker_414a5945234921e7077edb0becd6d6a3 = L.circleMarker(
+                [18.545, 73.815],
+                {"bubblingMouseEvents": true, "color": "#e74c3c", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#e74c3c", "fillOpacity": 0.8, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 0.9, "radius": 21.04024024254761, "stroke": true, "weight": 2}
+            ).addTo(map_d561194b256c254ed5cbe7e2f95dbad2);
+        
+    
+        var popup_c9c139f155d5b92c3bfdf31449174d4c = L.popup({
+  "maxWidth": 400,
+});
+
+        
+            
+                var html_658a53bc1122cb2ce6ff8717d111940b = $(`<div id="html_658a53bc1122cb2ce6ff8717d111940b" style="width: 100.0%; height: 100.0%;">         <div style="font-family: Arial; width: 350px;">         <h4 style="margin: 0 0 10px 0;">Ward_4 - Wakad</h4>         <hr style="margin: 5px 0;">         <b>Stress Assessment:</b><br>         Stress Zone: <span style="color: #e74c3c; font-weight: bold;">High Stress</span><br>         ESI Score: <b>0.652</b> (0-1 scale)<br>         <hr style="margin: 5px 0;">                  <b>Environmental Indicators:</b><br>         PM2.5: <b>105.5</b> µg/m³ (WHO limit: 35)<br>         Temperature: <b>27.5</b>°C<br>         Population Density: <b>9033</b> persons/km²<br>         Green Cover: <b>11.6%</b><br>         Vulnerable Population: <b>30.0%</b><br>         <hr style="margin: 5px 0;">                  <b>Geographic Location:</b><br>         Area: <b>Wakad</b><br>         Population: <b>69,000</b><br>         Distance from City Center: <b>5.5 km</b><br>         Coordinates: (18.5450°N, 73.8150°E)<br>         <hr style="margin: 5px 0;">                  <b>Budget Allocation (3 Years):</b><br>         <span style="background: #e8f5e9; padding: 8px; display: block; margin: 5px 0; border-radius: 3px;">         Total: <b>₹30.23 Lakhs</b><br>         <span style="font-size: 0.9em;">         • Green Infrastructure: ₹12.09L<br>         • Pollution Control: ₹10.58L<br>         • Health Monitoring: ₹4.53L<br>         • Research: ₹3.02L         </span>         </span>         </div>         </div>`)[0];
+                popup_c9c139f155d5b92c3bfdf31449174d4c.setContent(html_658a53bc1122cb2ce6ff8717d111940b);
+            
+        
+
+        circle_marker_414a5945234921e7077edb0becd6d6a3.bindPopup(popup_c9c139f155d5b92c3bfdf31449174d4c)
+        ;
+
+        
+    
+    
+            circle_marker_414a5945234921e7077edb0becd6d6a3.bindTooltip(
+                `<div>
+                     Ward_4 (High Stress, ESI: 0.652)
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+            var circle_marker_895dcc72cf56fb66261ccbde28673767 = L.circleMarker(
+                [18.575, 73.845],
+                {"bubblingMouseEvents": true, "color": "#2ecc71", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#2ecc71", "fillOpacity": 0.8, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 0.9, "radius": 18.5027840224532, "stroke": true, "weight": 2}
+            ).addTo(map_d561194b256c254ed5cbe7e2f95dbad2);
+        
+    
+        var popup_0ae9dbe07363fbb3447387ead1592517 = L.popup({
+  "maxWidth": 400,
+});
+
+        
+            
+                var html_a2b442a388f6f17d86b8abe66113be53 = $(`<div id="html_a2b442a388f6f17d86b8abe66113be53" style="width: 100.0%; height: 100.0%;">         <div style="font-family: Arial; width: 350px;">         <h4 style="margin: 0 0 10px 0;">Ward_5 - Aundh</h4>         <hr style="margin: 5px 0;">         <b>Stress Assessment:</b><br>         Stress Zone: <span style="color: #2ecc71; font-weight: bold;">Low Stress</span><br>         ESI Score: <b>0.525</b> (0-1 scale)<br>         <hr style="margin: 5px 0;">                  <b>Environmental Indicators:</b><br>         PM2.5: <b>70.3</b> µg/m³ (WHO limit: 35)<br>         Temperature: <b>30.3</b>°C<br>         Population Density: <b>10518</b> persons/km²<br>         Green Cover: <b>22.0%</b><br>         Vulnerable Population: <b>22.5%</b><br>         <hr style="margin: 5px 0;">                  <b>Geographic Location:</b><br>         Area: <b>Aundh</b><br>         Population: <b>80,000</b><br>         Distance from City Center: <b>4.8 km</b><br>         Coordinates: (18.5750°N, 73.8450°E)<br>         <hr style="margin: 5px 0;">                  <b>Budget Allocation (3 Years):</b><br>         <span style="background: #e8f5e9; padding: 8px; display: block; margin: 5px 0; border-radius: 3px;">         Total: <b>₹3.51 Lakhs</b><br>         <span style="font-size: 0.9em;">         • Green Infrastructure: ₹1.05L<br>         • Pollution Control: ₹0.70L<br>         • Health Monitoring: ₹1.05L<br>         • Research: ₹0.70L         </span>         </span>         </div>         </div>`)[0];
+                popup_0ae9dbe07363fbb3447387ead1592517.setContent(html_a2b442a388f6f17d86b8abe66113be53);
+            
+        
+
+        circle_marker_895dcc72cf56fb66261ccbde28673767.bindPopup(popup_0ae9dbe07363fbb3447387ead1592517)
+        ;
+
+        
+    
+    
+            circle_marker_895dcc72cf56fb66261ccbde28673767.bindTooltip(
+                `<div>
+                     Ward_5 (Low Stress, ESI: 0.525)
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+            var circle_marker_6380f6c87f3de268a4d75fcb8dc676f8 = L.circleMarker(
+                [18.495, 73.825],
+                {"bubblingMouseEvents": true, "color": "#e74c3c", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#e74c3c", "fillOpacity": 0.8, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 0.9, "radius": 19.672840415974733, "stroke": true, "weight": 2}
+            ).addTo(map_d561194b256c254ed5cbe7e2f95dbad2);
+        
+    
+        var popup_6e9f0fa8a036f17959868b9ca27cf5b2 = L.popup({
+  "maxWidth": 400,
+});
+
+        
+            
+                var html_1893a7471f768d06a49417645804be64 = $(`<div id="html_1893a7471f768d06a49417645804be64" style="width: 100.0%; height: 100.0%;">         <div style="font-family: Arial; width: 350px;">         <h4 style="margin: 0 0 10px 0;">Ward_6 - Hadapsar</h4>         <hr style="margin: 5px 0;">         <b>Stress Assessment:</b><br>         Stress Zone: <span style="color: #e74c3c; font-weight: bold;">High Stress</span><br>         ESI Score: <b>0.584</b> (0-1 scale)<br>         <hr style="margin: 5px 0;">                  <b>Environmental Indicators:</b><br>         PM2.5: <b>70.3</b> µg/m³ (WHO limit: 35)<br>         Temperature: <b>29.2</b>°C<br>         Population Density: <b>12849</b> persons/km²<br>         Green Cover: <b>11.8%</b><br>         Vulnerable Population: <b>21.2%</b><br>         <hr style="margin: 5px 0;">                  <b>Geographic Location:</b><br>         Area: <b>Hadapsar</b><br>         Population: <b>98,000</b><br>         Distance from City Center: <b>6.2 km</b><br>         Coordinates: (18.4950°N, 73.8250°E)<br>         <hr style="margin: 5px 0;">                  <b>Budget Allocation (3 Years):</b><br>         <span style="background: #e8f5e9; padding: 8px; display: block; margin: 5px 0; border-radius: 3px;">         Total: <b>₹37.15 Lakhs</b><br>         <span style="font-size: 0.9em;">         • Green Infrastructure: ₹14.86L<br>         • Pollution Control: ₹13.00L<br>         • Health Monitoring: ₹5.57L<br>         • Research: ₹3.71L         </span>         </span>         </div>         </div>`)[0];
+                popup_6e9f0fa8a036f17959868b9ca27cf5b2.setContent(html_1893a7471f768d06a49417645804be64);
+            
+        
+
+        circle_marker_6380f6c87f3de268a4d75fcb8dc676f8.bindPopup(popup_6e9f0fa8a036f17959868b9ca27cf5b2)
+        ;
+
+        
+    
+    
+            circle_marker_6380f6c87f3de268a4d75fcb8dc676f8.bindTooltip(
+                `<div>
+                     Ward_6 (High Stress, ESI: 0.584)
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+            var circle_marker_a375eef35abe2bb3eb29cff91227fc48 = L.circleMarker(
+                [18.505, 73.78],
+                {"bubblingMouseEvents": true, "color": "#e74c3c", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#e74c3c", "fillOpacity": 0.8, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 0.9, "radius": 21.820947574401963, "stroke": true, "weight": 2}
+            ).addTo(map_d561194b256c254ed5cbe7e2f95dbad2);
+        
+    
+        var popup_84c938f4b93c4ae2dd8ac66ff70bf7b3 = L.popup({
+  "maxWidth": 400,
+});
+
+        
+            
+                var html_466d7e7f21437602847a618cda9f6961 = $(`<div id="html_466d7e7f21437602847a618cda9f6961" style="width: 100.0%; height: 100.0%;">         <div style="font-family: Arial; width: 350px;">         <h4 style="margin: 0 0 10px 0;">Ward_7 - Pune City South</h4>         <hr style="margin: 5px 0;">         <b>Stress Assessment:</b><br>         Stress Zone: <span style="color: #e74c3c; font-weight: bold;">High Stress</span><br>         ESI Score: <b>0.691</b> (0-1 scale)<br>         <hr style="margin: 5px 0;">                  <b>Environmental Indicators:</b><br>         PM2.5: <b>106.6</b> µg/m³ (WHO limit: 35)<br>         Temperature: <b>27.4</b>°C<br>         Population Density: <b>10738</b> persons/km²<br>         Green Cover: <b>14.7%</b><br>         Vulnerable Population: <b>41.3%</b><br>         <hr style="margin: 5px 0;">                  <b>Geographic Location:</b><br>         Area: <b>Pune City South</b><br>         Population: <b>82,000</b><br>         Distance from City Center: <b>5.0 km</b><br>         Coordinates: (18.5050°N, 73.7800°E)<br>         <hr style="margin: 5px 0;">                  <b>Budget Allocation (3 Years):</b><br>         <span style="background: #e8f5e9; padding: 8px; display: block; margin: 5px 0; border-radius: 3px;">         Total: <b>₹38.73 Lakhs</b><br>         <span style="font-size: 0.9em;">         • Green Infrastructure: ₹15.49L<br>         • Pollution Control: ₹13.56L<br>         • Health Monitoring: ₹5.81L<br>         • Research: ₹3.87L         </span>         </span>         </div>         </div>`)[0];
+                popup_84c938f4b93c4ae2dd8ac66ff70bf7b3.setContent(html_466d7e7f21437602847a618cda9f6961);
+            
+        
+
+        circle_marker_a375eef35abe2bb3eb29cff91227fc48.bindPopup(popup_84c938f4b93c4ae2dd8ac66ff70bf7b3)
+        ;
+
+        
+    
+    
+            circle_marker_a375eef35abe2bb3eb29cff91227fc48.bindTooltip(
+                `<div>
+                     Ward_7 (High Stress, ESI: 0.691)
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+            var circle_marker_b8aabaadaf7f4d6ff67932c8184c0984 = L.circleMarker(
+                [18.465, 73.875],
+                {"bubblingMouseEvents": true, "color": "#2ecc71", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#2ecc71", "fillOpacity": 0.8, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 0.9, "radius": 18.78067601574617, "stroke": true, "weight": 2}
+            ).addTo(map_d561194b256c254ed5cbe7e2f95dbad2);
+        
+    
+        var popup_6d2c385a2b518c79d4ab14fc52e73201 = L.popup({
+  "maxWidth": 400,
+});
+
+        
+            
+                var html_fc737564e3e76190b8529f61c2701b85 = $(`<div id="html_fc737564e3e76190b8529f61c2701b85" style="width: 100.0%; height: 100.0%;">         <div style="font-family: Arial; width: 350px;">         <h4 style="margin: 0 0 10px 0;">Ward_8 - Lohegaon</h4>         <hr style="margin: 5px 0;">         <b>Stress Assessment:</b><br>         Stress Zone: <span style="color: #2ecc71; font-weight: bold;">Low Stress</span><br>         ESI Score: <b>0.539</b> (0-1 scale)<br>         <hr style="margin: 5px 0;">                  <b>Environmental Indicators:</b><br>         PM2.5: <b>90.3</b> µg/m³ (WHO limit: 35)<br>         Temperature: <b>29.5</b>°C<br>         Population Density: <b>7073</b> persons/km²<br>         Green Cover: <b>13.8%</b><br>         Vulnerable Population: <b>9.4%</b><br>         <hr style="margin: 5px 0;">                  <b>Geographic Location:</b><br>         Area: <b>Lohegaon</b><br>         Population: <b>54,000</b><br>         Distance from City Center: <b>7.5 km</b><br>         Coordinates: (18.4650°N, 73.8750°E)<br>         <hr style="margin: 5px 0;">                  <b>Budget Allocation (3 Years):</b><br>         <span style="background: #e8f5e9; padding: 8px; display: block; margin: 5px 0; border-radius: 3px;">         Total: <b>₹2.36 Lakhs</b><br>         <span style="font-size: 0.9em;">         • Green Infrastructure: ₹0.71L<br>         • Pollution Control: ₹0.47L<br>         • Health Monitoring: ₹0.71L<br>         • Research: ₹0.47L         </span>         </span>         </div>         </div>`)[0];
+                popup_6d2c385a2b518c79d4ab14fc52e73201.setContent(html_fc737564e3e76190b8529f61c2701b85);
+            
+        
+
+        circle_marker_b8aabaadaf7f4d6ff67932c8184c0984.bindPopup(popup_6d2c385a2b518c79d4ab14fc52e73201)
+        ;
+
+        
+    
+    
+            circle_marker_b8aabaadaf7f4d6ff67932c8184c0984.bindTooltip(
+                `<div>
+                     Ward_8 (Low Stress, ESI: 0.539)
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+            var circle_marker_a4cf63c74518d26636128a3965947ae3 = L.circleMarker(
+                [18.615, 73.815],
+                {"bubblingMouseEvents": true, "color": "#f39c12", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#f39c12", "fillOpacity": 0.8, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 0.9, "radius": 19.72726610466265, "stroke": true, "weight": 2}
+            ).addTo(map_d561194b256c254ed5cbe7e2f95dbad2);
+        
+    
+        var popup_71b4f894ee7576c0de9edd7fd1440cb2 = L.popup({
+  "maxWidth": 400,
+});
+
+        
+            
+                var html_2a6470c362fe91517a3400f5ec5945af = $(`<div id="html_2a6470c362fe91517a3400f5ec5945af" style="width: 100.0%; height: 100.0%;">         <div style="font-family: Arial; width: 350px;">         <h4 style="margin: 0 0 10px 0;">Ward_9 - Yerawada</h4>         <hr style="margin: 5px 0;">         <b>Stress Assessment:</b><br>         Stress Zone: <span style="color: #f39c12; font-weight: bold;">Medium Stress</span><br>         ESI Score: <b>0.586</b> (0-1 scale)<br>         <hr style="margin: 5px 0;">                  <b>Environmental Indicators:</b><br>         PM2.5: <b>65.6</b> µg/m³ (WHO limit: 35)<br>         Temperature: <b>28.7</b>°C<br>         Population Density: <b>12740</b> persons/km²<br>         Green Cover: <b>12.3%</b><br>         Vulnerable Population: <b>42.7%</b><br>         <hr style="margin: 5px 0;">                  <b>Geographic Location:</b><br>         Area: <b>Yerawada</b><br>         Population: <b>97,000</b><br>         Distance from City Center: <b>8.2 km</b><br>         Coordinates: (18.6150°N, 73.8150°E)<br>         <hr style="margin: 5px 0;">                  <b>Budget Allocation (3 Years):</b><br>         <span style="background: #e8f5e9; padding: 8px; display: block; margin: 5px 0; border-radius: 3px;">         Total: <b>₹20.46 Lakhs</b><br>         <span style="font-size: 0.9em;">         • Green Infrastructure: ₹7.16L<br>         • Pollution Control: ₹6.14L<br>         • Health Monitoring: ₹4.09L<br>         • Research: ₹3.07L         </span>         </span>         </div>         </div>`)[0];
+                popup_71b4f894ee7576c0de9edd7fd1440cb2.setContent(html_2a6470c362fe91517a3400f5ec5945af);
+            
+        
+
+        circle_marker_a4cf63c74518d26636128a3965947ae3.bindPopup(popup_71b4f894ee7576c0de9edd7fd1440cb2)
+        ;
+
+        
+    
+    
+            circle_marker_a4cf63c74518d26636128a3965947ae3.bindTooltip(
+                `<div>
+                     Ward_9 (Medium Stress, ESI: 0.586)
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+            var circle_marker_c527f2457cc84abab0b7b808c2a6aeb2 = L.circleMarker(
+                [18.435, 73.895],
+                {"bubblingMouseEvents": true, "color": "#e74c3c", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#e74c3c", "fillOpacity": 0.8, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 0.9, "radius": 21.518705289054544, "stroke": true, "weight": 2}
+            ).addTo(map_d561194b256c254ed5cbe7e2f95dbad2);
+        
+    
+        var popup_45f98a57008485d3181ff87005b87756 = L.popup({
+  "maxWidth": 400,
+});
+
+        
+            
+                var html_788affe060862d89a84b8ac7fe52148d = $(`<div id="html_788affe060862d89a84b8ac7fe52148d" style="width: 100.0%; height: 100.0%;">         <div style="font-family: Arial; width: 350px;">         <h4 style="margin: 0 0 10px 0;">Ward_10 - Rajgurunagar</h4>         <hr style="margin: 5px 0;">         <b>Stress Assessment:</b><br>         Stress Zone: <span style="color: #e74c3c; font-weight: bold;">High Stress</span><br>         ESI Score: <b>0.676</b> (0-1 scale)<br>         <hr style="margin: 5px 0;">                  <b>Environmental Indicators:</b><br>         PM2.5: <b>85.8</b> µg/m³ (WHO limit: 35)<br>         Temperature: <b>30.4</b>°C<br>         Population Density: <b>8782</b> persons/km²<br>         Green Cover: <b>7.4%</b><br>         Vulnerable Population: <b>32.1%</b><br>         <hr style="margin: 5px 0;">                  <b>Geographic Location:</b><br>         Area: <b>Rajgurunagar</b><br>         Population: <b>67,000</b><br>         Distance from City Center: <b>9.8 km</b><br>         Coordinates: (18.4350°N, 73.8950°E)<br>         <hr style="margin: 5px 0;">                  <b>Budget Allocation (3 Years):</b><br>         <span style="background: #e8f5e9; padding: 8px; display: block; margin: 5px 0; border-radius: 3px;">         Total: <b>₹30.79 Lakhs</b><br>         <span style="font-size: 0.9em;">         • Green Infrastructure: ₹12.32L<br>         • Pollution Control: ₹10.78L<br>         • Health Monitoring: ₹4.62L<br>         • Research: ₹3.08L         </span>         </span>         </div>         </div>`)[0];
+                popup_45f98a57008485d3181ff87005b87756.setContent(html_788affe060862d89a84b8ac7fe52148d);
+            
+        
+
+        circle_marker_c527f2457cc84abab0b7b808c2a6aeb2.bindPopup(popup_45f98a57008485d3181ff87005b87756)
+        ;
+
+        
+    
+    
+            circle_marker_c527f2457cc84abab0b7b808c2a6aeb2.bindTooltip(
+                `<div>
+                     Ward_10 (High Stress, ESI: 0.676)
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+            var circle_marker_b1393f3916e4c3d7d107e3ab3051f5ea = L.circleMarker(
+                [18.625, 73.755],
+                {"bubblingMouseEvents": true, "color": "#e74c3c", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#e74c3c", "fillOpacity": 0.8, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 0.9, "radius": 18.438378841674496, "stroke": true, "weight": 2}
+            ).addTo(map_d561194b256c254ed5cbe7e2f95dbad2);
+        
+    
+        var popup_8b6028507edda6c1385cbc54dd4c727c = L.popup({
+  "maxWidth": 400,
+});
+
+        
+            
+                var html_78344a4ea7534dcbe66139d4ebe3a02e = $(`<div id="html_78344a4ea7534dcbe66139d4ebe3a02e" style="width: 100.0%; height: 100.0%;">         <div style="font-family: Arial; width: 350px;">         <h4 style="margin: 0 0 10px 0;">Ward_11 - Chakan</h4>         <hr style="margin: 5px 0;">         <b>Stress Assessment:</b><br>         Stress Zone: <span style="color: #e74c3c; font-weight: bold;">High Stress</span><br>         ESI Score: <b>0.522</b> (0-1 scale)<br>         <hr style="margin: 5px 0;">                  <b>Environmental Indicators:</b><br>         PM2.5: <b>65.7</b> µg/m³ (WHO limit: 35)<br>         Temperature: <b>27.1</b>°C<br>         Population Density: <b>14158</b> persons/km²<br>         Green Cover: <b>12.8%</b><br>         Vulnerable Population: <b>27.1%</b><br>         <hr style="margin: 5px 0;">                  <b>Geographic Location:</b><br>         Area: <b>Chakan</b><br>         Population: <b>108,000</b><br>         Distance from City Center: <b>18.5 km</b><br>         Coordinates: (18.6250°N, 73.7550°E)<br>         <hr style="margin: 5px 0;">                  <b>Budget Allocation (3 Years):</b><br>         <span style="background: #e8f5e9; padding: 8px; display: block; margin: 5px 0; border-radius: 3px;">         Total: <b>₹35.10 Lakhs</b><br>         <span style="font-size: 0.9em;">         • Green Infrastructure: ₹14.04L<br>         • Pollution Control: ₹12.29L<br>         • Health Monitoring: ₹5.27L<br>         • Research: ₹3.51L         </span>         </span>         </div>         </div>`)[0];
+                popup_8b6028507edda6c1385cbc54dd4c727c.setContent(html_78344a4ea7534dcbe66139d4ebe3a02e);
+            
+        
+
+        circle_marker_b1393f3916e4c3d7d107e3ab3051f5ea.bindPopup(popup_8b6028507edda6c1385cbc54dd4c727c)
+        ;
+
+        
+    
+    
+            circle_marker_b1393f3916e4c3d7d107e3ab3051f5ea.bindTooltip(
+                `<div>
+                     Ward_11 (High Stress, ESI: 0.522)
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+            var circle_marker_b9b6d8b64b8bc14d5e6c315d35549bfa = L.circleMarker(
+                [18.405, 73.92],
+                {"bubblingMouseEvents": true, "color": "#e74c3c", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#e74c3c", "fillOpacity": 0.8, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 0.9, "radius": 18.896412579652633, "stroke": true, "weight": 2}
+            ).addTo(map_d561194b256c254ed5cbe7e2f95dbad2);
+        
+    
+        var popup_1eb3203fc73b445ad0eeb0d28bf8c4b6 = L.popup({
+  "maxWidth": 400,
+});
+
+        
+            
+                var html_dcb0f576c6bff8eaa417d08584616003 = $(`<div id="html_dcb0f576c6bff8eaa417d08584616003" style="width: 100.0%; height: 100.0%;">         <div style="font-family: Arial; width: 350px;">         <h4 style="margin: 0 0 10px 0;">Ward_12 - Bhor</h4>         <hr style="margin: 5px 0;">         <b>Stress Assessment:</b><br>         Stress Zone: <span style="color: #e74c3c; font-weight: bold;">High Stress</span><br>         ESI Score: <b>0.545</b> (0-1 scale)<br>         <hr style="margin: 5px 0;">                  <b>Environmental Indicators:</b><br>         PM2.5: <b>65.7</b> µg/m³ (WHO limit: 35)<br>         Temperature: <b>27.8</b>°C<br>         Population Density: <b>9282</b> persons/km²<br>         Green Cover: <b>5.1%</b><br>         Vulnerable Population: <b>26.7%</b><br>         <hr style="margin: 5px 0;">                  <b>Geographic Location:</b><br>         Area: <b>Bhor</b><br>         Population: <b>71,000</b><br>         Distance from City Center: <b>22.0 km</b><br>         Coordinates: (18.4050°N, 73.9200°E)<br>         <hr style="margin: 5px 0;">                  <b>Budget Allocation (3 Years):</b><br>         <span style="background: #e8f5e9; padding: 8px; display: block; margin: 5px 0; border-radius: 3px;">         Total: <b>₹24.43 Lakhs</b><br>         <span style="font-size: 0.9em;">         • Green Infrastructure: ₹9.77L<br>         • Pollution Control: ₹8.55L<br>         • Health Monitoring: ₹3.66L<br>         • Research: ₹2.44L         </span>         </span>         </div>         </div>`)[0];
+                popup_1eb3203fc73b445ad0eeb0d28bf8c4b6.setContent(html_dcb0f576c6bff8eaa417d08584616003);
+            
+        
+
+        circle_marker_b9b6d8b64b8bc14d5e6c315d35549bfa.bindPopup(popup_1eb3203fc73b445ad0eeb0d28bf8c4b6)
+        ;
+
+        
+    
+    
+            circle_marker_b9b6d8b64b8bc14d5e6c315d35549bfa.bindTooltip(
+                `<div>
+                     Ward_12 (High Stress, ESI: 0.545)
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+            var circle_marker_adda05bb7816a4d1289744fa54ff2753 = L.circleMarker(
+                [18.355, 73.78],
+                {"bubblingMouseEvents": true, "color": "#e74c3c", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#e74c3c", "fillOpacity": 0.8, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 0.9, "radius": 22.343465225643847, "stroke": true, "weight": 2}
+            ).addTo(map_d561194b256c254ed5cbe7e2f95dbad2);
+        
+    
+        var popup_008cd454ee5ba551def73bf3bd3a2fc6 = L.popup({
+  "maxWidth": 400,
+});
+
+        
+            
+                var html_f5b99db999e134f550008a613bb9bef3 = $(`<div id="html_f5b99db999e134f550008a613bb9bef3" style="width: 100.0%; height: 100.0%;">         <div style="font-family: Arial; width: 350px;">         <h4 style="margin: 0 0 10px 0;">Ward_13 - Jejuri</h4>         <hr style="margin: 5px 0;">         <b>Stress Assessment:</b><br>         Stress Zone: <span style="color: #e74c3c; font-weight: bold;">High Stress</span><br>         ESI Score: <b>0.717</b> (0-1 scale)<br>         <hr style="margin: 5px 0;">                  <b>Environmental Indicators:</b><br>         PM2.5: <b>79.8</b> µg/m³ (WHO limit: 35)<br>         Temperature: <b>27.7</b>°C<br>         Population Density: <b>17925</b> persons/km²<br>         Green Cover: <b>7.8%</b><br>         Vulnerable Population: <b>41.6%</b><br>         <hr style="margin: 5px 0;">                  <b>Geographic Location:</b><br>         Area: <b>Jejuri</b><br>         Population: <b>137,000</b><br>         Distance from City Center: <b>28.0 km</b><br>         Coordinates: (18.3550°N, 73.7800°E)<br>         <hr style="margin: 5px 0;">                  <b>Budget Allocation (3 Years):</b><br>         <span style="background: #e8f5e9; padding: 8px; display: block; margin: 5px 0; border-radius: 3px;">         Total: <b>₹67.78 Lakhs</b><br>         <span style="font-size: 0.9em;">         • Green Infrastructure: ₹27.11L<br>         • Pollution Control: ₹23.72L<br>         • Health Monitoring: ₹10.17L<br>         • Research: ₹6.78L         </span>         </span>         </div>         </div>`)[0];
+                popup_008cd454ee5ba551def73bf3bd3a2fc6.setContent(html_f5b99db999e134f550008a613bb9bef3);
+            
+        
+
+        circle_marker_adda05bb7816a4d1289744fa54ff2753.bindPopup(popup_008cd454ee5ba551def73bf3bd3a2fc6)
+        ;
+
+        
+    
+    
+            circle_marker_adda05bb7816a4d1289744fa54ff2753.bindTooltip(
+                `<div>
+                     Ward_13 (High Stress, ESI: 0.717)
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+            var circle_marker_235d48db54d992eb057b0a930f65853c = L.circleMarker(
+                [18.675, 73.92],
+                {"bubblingMouseEvents": true, "color": "#f39c12", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#f39c12", "fillOpacity": 0.8, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 0.9, "radius": 15.970455471459989, "stroke": true, "weight": 2}
+            ).addTo(map_d561194b256c254ed5cbe7e2f95dbad2);
+        
+    
+        var popup_3bff2515d0eb6b841fc9c3abc16d42fa = L.popup({
+  "maxWidth": 400,
+});
+
+        
+            
+                var html_8da0add9945fba00925703806adef9eb = $(`<div id="html_8da0add9945fba00925703806adef9eb" style="width: 100.0%; height: 100.0%;">         <div style="font-family: Arial; width: 350px;">         <h4 style="margin: 0 0 10px 0;">Ward_14 - Narayangaon</h4>         <hr style="margin: 5px 0;">         <b>Stress Assessment:</b><br>         Stress Zone: <span style="color: #f39c12; font-weight: bold;">Medium Stress</span><br>         ESI Score: <b>0.399</b> (0-1 scale)<br>         <hr style="margin: 5px 0;">                  <b>Environmental Indicators:</b><br>         PM2.5: <b>45.0</b> µg/m³ (WHO limit: 35)<br>         Temperature: <b>26.0</b>°C<br>         Population Density: <b>9759</b> persons/km²<br>         Green Cover: <b>6.6%</b><br>         Vulnerable Population: <b>28.7%</b><br>         <hr style="margin: 5px 0;">                  <b>Geographic Location:</b><br>         Area: <b>Narayangaon</b><br>         Population: <b>74,000</b><br>         Distance from City Center: <b>25.5 km</b><br>         Coordinates: (18.6750°N, 73.9200°E)<br>         <hr style="margin: 5px 0;">                  <b>Budget Allocation (3 Years):</b><br>         <span style="background: #e8f5e9; padding: 8px; display: block; margin: 5px 0; border-radius: 3px;">         Total: <b>₹12.01 Lakhs</b><br>         <span style="font-size: 0.9em;">         • Green Infrastructure: ₹4.20L<br>         • Pollution Control: ₹3.60L<br>         • Health Monitoring: ₹2.40L<br>         • Research: ₹1.80L         </span>         </span>         </div>         </div>`)[0];
+                popup_3bff2515d0eb6b841fc9c3abc16d42fa.setContent(html_8da0add9945fba00925703806adef9eb);
+            
+        
+
+        circle_marker_235d48db54d992eb057b0a930f65853c.bindPopup(popup_3bff2515d0eb6b841fc9c3abc16d42fa)
+        ;
+
+        
+    
+    
+            circle_marker_235d48db54d992eb057b0a930f65853c.bindTooltip(
+                `<div>
+                     Ward_14 (Medium Stress, ESI: 0.399)
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+            var circle_marker_2e494f0b889ed17cc6a4fe87df8470ff = L.circleMarker(
+                [18.705, 73.85],
+                {"bubblingMouseEvents": true, "color": "#f39c12", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#f39c12", "fillOpacity": 0.8, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 0.9, "radius": 17.97828518801743, "stroke": true, "weight": 2}
+            ).addTo(map_d561194b256c254ed5cbe7e2f95dbad2);
+        
+    
+        var popup_abe679e1ea8c9778a8b8dee18a4af422 = L.popup({
+  "maxWidth": 400,
+});
+
+        
+            
+                var html_1fcd43cb0c7ace1472ed47091304a651 = $(`<div id="html_1fcd43cb0c7ace1472ed47091304a651" style="width: 100.0%; height: 100.0%;">         <div style="font-family: Arial; width: 350px;">         <h4 style="margin: 0 0 10px 0;">Ward_15 - Shirur</h4>         <hr style="margin: 5px 0;">         <b>Stress Assessment:</b><br>         Stress Zone: <span style="color: #f39c12; font-weight: bold;">Medium Stress</span><br>         ESI Score: <b>0.499</b> (0-1 scale)<br>         <hr style="margin: 5px 0;">                  <b>Environmental Indicators:</b><br>         PM2.5: <b>45.0</b> µg/m³ (WHO limit: 35)<br>         Temperature: <b>29.1</b>°C<br>         Population Density: <b>11373</b> persons/km²<br>         Green Cover: <b>9.4%</b><br>         Vulnerable Population: <b>36.8%</b><br>         <hr style="margin: 5px 0;">                  <b>Geographic Location:</b><br>         Area: <b>Shirur</b><br>         Population: <b>87,000</b><br>         Distance from City Center: <b>30.0 km</b><br>         Coordinates: (18.7050°N, 73.8500°E)<br>         <hr style="margin: 5px 0;">                  <b>Budget Allocation (3 Years):</b><br>         <span style="background: #e8f5e9; padding: 8px; display: block; margin: 5px 0; border-radius: 3px;">         Total: <b>₹16.28 Lakhs</b><br>         <span style="font-size: 0.9em;">         • Green Infrastructure: ₹5.70L<br>         • Pollution Control: ₹4.88L<br>         • Health Monitoring: ₹3.26L<br>         • Research: ₹2.44L         </span>         </span>         </div>         </div>`)[0];
+                popup_abe679e1ea8c9778a8b8dee18a4af422.setContent(html_1fcd43cb0c7ace1472ed47091304a651);
+            
+        
+
+        circle_marker_2e494f0b889ed17cc6a4fe87df8470ff.bindPopup(popup_abe679e1ea8c9778a8b8dee18a4af422)
+        ;
+
+        
+    
+    
+            circle_marker_2e494f0b889ed17cc6a4fe87df8470ff.bindTooltip(
+                `<div>
+                     Ward_15 (Medium Stress, ESI: 0.499)
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+            var circle_marker_a087213529ba6852166aa103223a50b2 = L.circleMarker(
+                [18.555, 73.72],
+                {"bubblingMouseEvents": true, "color": "#e74c3c", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#e74c3c", "fillOpacity": 0.8, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 0.9, "radius": 18.89478810654283, "stroke": true, "weight": 2}
+            ).addTo(map_d561194b256c254ed5cbe7e2f95dbad2);
+        
+    
+        var popup_d69e4ec1c5da91fe2555ee058ce29a2f = L.popup({
+  "maxWidth": 400,
+});
+
+        
+            
+                var html_23a3c03855accf7be464a1a56e59e079 = $(`<div id="html_23a3c03855accf7be464a1a56e59e079" style="width: 100.0%; height: 100.0%;">         <div style="font-family: Arial; width: 350px;">         <h4 style="margin: 0 0 10px 0;">Ward_16 - Indapur</h4>         <hr style="margin: 5px 0;">         <b>Stress Assessment:</b><br>         Stress Zone: <span style="color: #e74c3c; font-weight: bold;">High Stress</span><br>         ESI Score: <b>0.545</b> (0-1 scale)<br>         <hr style="margin: 5px 0;">                  <b>Environmental Indicators:</b><br>         PM2.5: <b>63.8</b> µg/m³ (WHO limit: 35)<br>         Temperature: <b>29.0</b>°C<br>         Population Density: <b>15347</b> persons/km²<br>         Green Cover: <b>20.6%</b><br>         Vulnerable Population: <b>28.2%</b><br>         <hr style="margin: 5px 0;">                  <b>Geographic Location:</b><br>         Area: <b>Indapur</b><br>         Population: <b>117,000</b><br>         Distance from City Center: <b>32.5 km</b><br>         Coordinates: (18.5550°N, 73.7200°E)<br>         <hr style="margin: 5px 0;">                  <b>Budget Allocation (3 Years):</b><br>         <span style="background: #e8f5e9; padding: 8px; display: block; margin: 5px 0; border-radius: 3px;">         Total: <b>₹40.39 Lakhs</b><br>         <span style="font-size: 0.9em;">         • Green Infrastructure: ₹16.16L<br>         • Pollution Control: ₹14.14L<br>         • Health Monitoring: ₹6.06L<br>         • Research: ₹4.04L         </span>         </span>         </div>         </div>`)[0];
+                popup_d69e4ec1c5da91fe2555ee058ce29a2f.setContent(html_23a3c03855accf7be464a1a56e59e079);
+            
+        
+
+        circle_marker_a087213529ba6852166aa103223a50b2.bindPopup(popup_d69e4ec1c5da91fe2555ee058ce29a2f)
+        ;
+
+        
+    
+    
+            circle_marker_a087213529ba6852166aa103223a50b2.bindTooltip(
+                `<div>
+                     Ward_16 (High Stress, ESI: 0.545)
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+            var circle_marker_421d519a592d39eaa43b626381822aea = L.circleMarker(
+                [18.595, 73.695],
+                {"bubblingMouseEvents": true, "color": "#f39c12", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#f39c12", "fillOpacity": 0.8, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 0.9, "radius": 18.86473537694567, "stroke": true, "weight": 2}
+            ).addTo(map_d561194b256c254ed5cbe7e2f95dbad2);
+        
+    
+        var popup_1a61c420724b6ac2c961c0f3449f8307 = L.popup({
+  "maxWidth": 400,
+});
+
+        
+            
+                var html_c539f9db34ede1f0f6534f052c17c6bd = $(`<div id="html_c539f9db34ede1f0f6534f052c17c6bd" style="width: 100.0%; height: 100.0%;">         <div style="font-family: Arial; width: 350px;">         <h4 style="margin: 0 0 10px 0;">Ward_17 - Mandawa</h4>         <hr style="margin: 5px 0;">         <b>Stress Assessment:</b><br>         Stress Zone: <span style="color: #f39c12; font-weight: bold;">Medium Stress</span><br>         ESI Score: <b>0.543</b> (0-1 scale)<br>         <hr style="margin: 5px 0;">                  <b>Environmental Indicators:</b><br>         PM2.5: <b>54.7</b> µg/m³ (WHO limit: 35)<br>         Temperature: <b>28.5</b>°C<br>         Population Density: <b>8192</b> persons/km²<br>         Green Cover: <b>3.0%</b><br>         Vulnerable Population: <b>44.2%</b><br>         <hr style="margin: 5px 0;">                  <b>Geographic Location:</b><br>         Area: <b>Mandawa</b><br>         Population: <b>63,000</b><br>         Distance from City Center: <b>28.0 km</b><br>         Coordinates: (18.5950°N, 73.6950°E)<br>         <hr style="margin: 5px 0;">                  <b>Budget Allocation (3 Years):</b><br>         <span style="background: #e8f5e9; padding: 8px; display: block; margin: 5px 0; border-radius: 3px;">         Total: <b>₹12.45 Lakhs</b><br>         <span style="font-size: 0.9em;">         • Green Infrastructure: ₹4.36L<br>         • Pollution Control: ₹3.74L<br>         • Health Monitoring: ₹2.49L<br>         • Research: ₹1.87L         </span>         </span>         </div>         </div>`)[0];
+                popup_1a61c420724b6ac2c961c0f3449f8307.setContent(html_c539f9db34ede1f0f6534f052c17c6bd);
+            
+        
+
+        circle_marker_421d519a592d39eaa43b626381822aea.bindPopup(popup_1a61c420724b6ac2c961c0f3449f8307)
+        ;
+
+        
+    
+    
+            circle_marker_421d519a592d39eaa43b626381822aea.bindTooltip(
+                `<div>
+                     Ward_17 (Medium Stress, ESI: 0.543)
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+            var circle_marker_9e662db57ee9245b31d96ebf97ac98ed = L.circleMarker(
+                [18.645, 73.89],
+                {"bubblingMouseEvents": true, "color": "#e74c3c", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#e74c3c", "fillOpacity": 0.8, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 0.9, "radius": 20.09334040359133, "stroke": true, "weight": 2}
+            ).addTo(map_d561194b256c254ed5cbe7e2f95dbad2);
+        
+    
+        var popup_25bee8e935276cb4f2a2cec7dbeddc93 = L.popup({
+  "maxWidth": 400,
+});
+
+        
+            
+                var html_ddd1ec14ce0a5836f4564652d46b2baa = $(`<div id="html_ddd1ec14ce0a5836f4564652d46b2baa" style="width: 100.0%; height: 100.0%;">         <div style="font-family: Arial; width: 350px;">         <h4 style="margin: 0 0 10px 0;">Ward_18 - Talegaon</h4>         <hr style="margin: 5px 0;">         <b>Stress Assessment:</b><br>         Stress Zone: <span style="color: #e74c3c; font-weight: bold;">High Stress</span><br>         ESI Score: <b>0.605</b> (0-1 scale)<br>         <hr style="margin: 5px 0;">                  <b>Environmental Indicators:</b><br>         PM2.5: <b>81.3</b> µg/m³ (WHO limit: 35)<br>         Temperature: <b>28.0</b>°C<br>         Population Density: <b>13296</b> persons/km²<br>         Green Cover: <b>12.4%</b><br>         Vulnerable Population: <b>18.3%</b><br>         <hr style="margin: 5px 0;">                  <b>Geographic Location:</b><br>         Area: <b>Talegaon</b><br>         Population: <b>102,000</b><br>         Distance from City Center: <b>24.0 km</b><br>         Coordinates: (18.6450°N, 73.8900°E)<br>         <hr style="margin: 5px 0;">                  <b>Budget Allocation (3 Years):</b><br>         <span style="background: #e8f5e9; padding: 8px; display: block; margin: 5px 0; border-radius: 3px;">         Total: <b>₹40.30 Lakhs</b><br>         <span style="font-size: 0.9em;">         • Green Infrastructure: ₹16.12L<br>         • Pollution Control: ₹14.11L<br>         • Health Monitoring: ₹6.05L<br>         • Research: ₹4.03L         </span>         </span>         </div>         </div>`)[0];
+                popup_25bee8e935276cb4f2a2cec7dbeddc93.setContent(html_ddd1ec14ce0a5836f4564652d46b2baa);
+            
+        
+
+        circle_marker_9e662db57ee9245b31d96ebf97ac98ed.bindPopup(popup_25bee8e935276cb4f2a2cec7dbeddc93)
+        ;
+
+        
+    
+    
+            circle_marker_9e662db57ee9245b31d96ebf97ac98ed.bindTooltip(
+                `<div>
+                     Ward_18 (High Stress, ESI: 0.605)
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+            var circle_marker_22a23793f34a624d34d4762c386c07c1 = L.circleMarker(
+                [18.715, 73.92],
+                {"bubblingMouseEvents": true, "color": "#e74c3c", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#e74c3c", "fillOpacity": 0.8, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 0.9, "radius": 19.27296885440483, "stroke": true, "weight": 2}
+            ).addTo(map_d561194b256c254ed5cbe7e2f95dbad2);
+        
+    
+        var popup_100850e4cf91e764dbe98d39093851d9 = L.popup({
+  "maxWidth": 400,
+});
+
+        
+            
+                var html_6f75a419f625d9f371854252cd1c76db = $(`<div id="html_6f75a419f625d9f371854252cd1c76db" style="width: 100.0%; height: 100.0%;">         <div style="font-family: Arial; width: 350px;">         <h4 style="margin: 0 0 10px 0;">Ward_19 - Ambegaon</h4>         <hr style="margin: 5px 0;">         <b>Stress Assessment:</b><br>         Stress Zone: <span style="color: #e74c3c; font-weight: bold;">High Stress</span><br>         ESI Score: <b>0.564</b> (0-1 scale)<br>         <hr style="margin: 5px 0;">                  <b>Environmental Indicators:</b><br>         PM2.5: <b>56.8</b> µg/m³ (WHO limit: 35)<br>         Temperature: <b>26.0</b>°C<br>         Population Density: <b>17075</b> persons/km²<br>         Green Cover: <b>3.0%</b><br>         Vulnerable Population: <b>32.2%</b><br>         <hr style="margin: 5px 0;">                  <b>Geographic Location:</b><br>         Area: <b>Ambegaon</b><br>         Population: <b>130,000</b><br>         Distance from City Center: <b>35.0 km</b><br>         Coordinates: (18.7150°N, 73.9200°E)<br>         <hr style="margin: 5px 0;">                  <b>Budget Allocation (3 Years):</b><br>         <span style="background: #e8f5e9; padding: 8px; display: block; margin: 5px 0; border-radius: 3px;">         Total: <b>₹47.09 Lakhs</b><br>         <span style="font-size: 0.9em;">         • Green Infrastructure: ₹18.83L<br>         • Pollution Control: ₹16.48L<br>         • Health Monitoring: ₹7.06L<br>         • Research: ₹4.71L         </span>         </span>         </div>         </div>`)[0];
+                popup_100850e4cf91e764dbe98d39093851d9.setContent(html_6f75a419f625d9f371854252cd1c76db);
+            
+        
+
+        circle_marker_22a23793f34a624d34d4762c386c07c1.bindPopup(popup_100850e4cf91e764dbe98d39093851d9)
+        ;
+
+        
+    
+    
+            circle_marker_22a23793f34a624d34d4762c386c07c1.bindTooltip(
+                `<div>
+                     Ward_19 (High Stress, ESI: 0.564)
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+            var circle_marker_bdd17026db2a05302ef2bbf1468a33ea = L.circleMarker(
+                [18.475, 73.75],
+                {"bubblingMouseEvents": true, "color": "#f39c12", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#f39c12", "fillOpacity": 0.8, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 0.9, "radius": 16.507079411009073, "stroke": true, "weight": 2}
+            ).addTo(map_d561194b256c254ed5cbe7e2f95dbad2);
+        
+    
+        var popup_2ef96a67461960335f4e0497d43c0dd0 = L.popup({
+  "maxWidth": 400,
+});
+
+        
+            
+                var html_700e9bee0e40d73f0c5198f809cb1c2d = $(`<div id="html_700e9bee0e40d73f0c5198f809cb1c2d" style="width: 100.0%; height: 100.0%;">         <div style="font-family: Arial; width: 350px;">         <h4 style="margin: 0 0 10px 0;">Ward_20 - Manchar</h4>         <hr style="margin: 5px 0;">         <b>Stress Assessment:</b><br>         Stress Zone: <span style="color: #f39c12; font-weight: bold;">Medium Stress</span><br>         ESI Score: <b>0.425</b> (0-1 scale)<br>         <hr style="margin: 5px 0;">                  <b>Environmental Indicators:</b><br>         PM2.5: <b>46.8</b> µg/m³ (WHO limit: 35)<br>         Temperature: <b>27.7</b>°C<br>         Population Density: <b>6874</b> persons/km²<br>         Green Cover: <b>6.6%</b><br>         Vulnerable Population: <b>32.7%</b><br>         <hr style="margin: 5px 0;">                  <b>Geographic Location:</b><br>         Area: <b>Manchar</b><br>         Population: <b>53,000</b><br>         Distance from City Center: <b>20.5 km</b><br>         Coordinates: (18.4750°N, 73.7500°E)<br>         <hr style="margin: 5px 0;">                  <b>Budget Allocation (3 Years):</b><br>         <span style="background: #e8f5e9; padding: 8px; display: block; margin: 5px 0; border-radius: 3px;">         Total: <b>₹8.83 Lakhs</b><br>         <span style="font-size: 0.9em;">         • Green Infrastructure: ₹3.09L<br>         • Pollution Control: ₹2.65L<br>         • Health Monitoring: ₹1.77L<br>         • Research: ₹1.32L         </span>         </span>         </div>         </div>`)[0];
+                popup_2ef96a67461960335f4e0497d43c0dd0.setContent(html_700e9bee0e40d73f0c5198f809cb1c2d);
+            
+        
+
+        circle_marker_bdd17026db2a05302ef2bbf1468a33ea.bindPopup(popup_2ef96a67461960335f4e0497d43c0dd0)
+        ;
+
+        
+    
+    
+            circle_marker_bdd17026db2a05302ef2bbf1468a33ea.bindTooltip(
+                `<div>
+                     Ward_20 (Medium Stress, ESI: 0.425)
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+            var circle_marker_767cddf387045c87b2c7b555e38934ea = L.circleMarker(
+                [18.325, 73.87],
+                {"bubblingMouseEvents": true, "color": "#2ecc71", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#2ecc71", "fillOpacity": 0.8, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 0.9, "radius": 12.670299580376085, "stroke": true, "weight": 2}
+            ).addTo(map_d561194b256c254ed5cbe7e2f95dbad2);
+        
+    
+        var popup_3dee1cd9d364cd50708d6e3b1dbcf0a3 = L.popup({
+  "maxWidth": 400,
+});
+
+        
+            
+                var html_06ad22ac6cb55baa7d1bc68b6c4276c9 = $(`<div id="html_06ad22ac6cb55baa7d1bc68b6c4276c9" style="width: 100.0%; height: 100.0%;">         <div style="font-family: Arial; width: 350px;">         <h4 style="margin: 0 0 10px 0;">Ward_21 - Saswad</h4>         <hr style="margin: 5px 0;">         <b>Stress Assessment:</b><br>         Stress Zone: <span style="color: #2ecc71; font-weight: bold;">Low Stress</span><br>         ESI Score: <b>0.234</b> (0-1 scale)<br>         <hr style="margin: 5px 0;">                  <b>Environmental Indicators:</b><br>         PM2.5: <b>52.2</b> µg/m³ (WHO limit: 35)<br>         Temperature: <b>27.8</b>°C<br>         Population Density: <b>4053</b> persons/km²<br>         Green Cover: <b>38.0%</b><br>         Vulnerable Population: <b>37.4%</b><br>         <hr style="margin: 5px 0;">                  <b>Geographic Location:</b><br>         Area: <b>Saswad</b><br>         Population: <b>31,000</b><br>         Distance from City Center: <b>32.0 km</b><br>         Coordinates: (18.3250°N, 73.8700°E)<br>         <hr style="margin: 5px 0;">                  <b>Budget Allocation (3 Years):</b><br>         <span style="background: #e8f5e9; padding: 8px; display: block; margin: 5px 0; border-radius: 3px;">         Total: <b>₹1.35 Lakhs</b><br>         <span style="font-size: 0.9em;">         • Green Infrastructure: ₹0.41L<br>         • Pollution Control: ₹0.27L<br>         • Health Monitoring: ₹0.41L<br>         • Research: ₹0.27L         </span>         </span>         </div>         </div>`)[0];
+                popup_3dee1cd9d364cd50708d6e3b1dbcf0a3.setContent(html_06ad22ac6cb55baa7d1bc68b6c4276c9);
+            
+        
+
+        circle_marker_767cddf387045c87b2c7b555e38934ea.bindPopup(popup_3dee1cd9d364cd50708d6e3b1dbcf0a3)
+        ;
+
+        
+    
+    
+            circle_marker_767cddf387045c87b2c7b555e38934ea.bindTooltip(
+                `<div>
+                     Ward_21 (Low Stress, ESI: 0.234)
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+            var circle_marker_a10065c14020ca6c87a7de54c2c312fd = L.circleMarker(
+                [18.285, 73.92],
+                {"bubblingMouseEvents": true, "color": "#f39c12", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#f39c12", "fillOpacity": 0.8, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 0.9, "radius": 14.480570039998975, "stroke": true, "weight": 2}
+            ).addTo(map_d561194b256c254ed5cbe7e2f95dbad2);
+        
+    
+        var popup_0201c8594db6b50d70202c6e3e6c7be7 = L.popup({
+  "maxWidth": 400,
+});
+
+        
+            
+                var html_f1cde1bbdcc7ae1a0e8cba04fed4e8ba = $(`<div id="html_f1cde1bbdcc7ae1a0e8cba04fed4e8ba" style="width: 100.0%; height: 100.0%;">         <div style="font-family: Arial; width: 350px;">         <h4 style="margin: 0 0 10px 0;">Ward_22 - Purandar</h4>         <hr style="margin: 5px 0;">         <b>Stress Assessment:</b><br>         Stress Zone: <span style="color: #f39c12; font-weight: bold;">Medium Stress</span><br>         ESI Score: <b>0.324</b> (0-1 scale)<br>         <hr style="margin: 5px 0;">                  <b>Environmental Indicators:</b><br>         PM2.5: <b>38.4</b> µg/m³ (WHO limit: 35)<br>         Temperature: <b>26.9</b>°C<br>         Population Density: <b>5928</b> persons/km²<br>         Green Cover: <b>15.6%</b><br>         Vulnerable Population: <b>38.8%</b><br>         <hr style="margin: 5px 0;">                  <b>Geographic Location:</b><br>         Area: <b>Purandar</b><br>         Population: <b>45,000</b><br>         Distance from City Center: <b>35.5 km</b><br>         Coordinates: (18.2850°N, 73.9200°E)<br>         <hr style="margin: 5px 0;">                  <b>Budget Allocation (3 Years):</b><br>         <span style="background: #e8f5e9; padding: 8px; display: block; margin: 5px 0; border-radius: 3px;">         Total: <b>₹6.41 Lakhs</b><br>         <span style="font-size: 0.9em;">         • Green Infrastructure: ₹2.24L<br>         • Pollution Control: ₹1.92L<br>         • Health Monitoring: ₹1.28L<br>         • Research: ₹0.96L         </span>         </span>         </div>         </div>`)[0];
+                popup_0201c8594db6b50d70202c6e3e6c7be7.setContent(html_f1cde1bbdcc7ae1a0e8cba04fed4e8ba);
+            
+        
+
+        circle_marker_a10065c14020ca6c87a7de54c2c312fd.bindPopup(popup_0201c8594db6b50d70202c6e3e6c7be7)
+        ;
+
+        
+    
+    
+            circle_marker_a10065c14020ca6c87a7de54c2c312fd.bindTooltip(
+                `<div>
+                     Ward_22 (Medium Stress, ESI: 0.324)
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+            var circle_marker_dfa3cf0f9c8e46d1ee809d6c98650a6a = L.circleMarker(
+                [18.345, 73.81],
+                {"bubblingMouseEvents": true, "color": "#f39c12", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#f39c12", "fillOpacity": 0.8, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 0.9, "radius": 14.391327315586985, "stroke": true, "weight": 2}
+            ).addTo(map_d561194b256c254ed5cbe7e2f95dbad2);
+        
+    
+        var popup_ab748735d174a0517403cdc3198780f5 = L.popup({
+  "maxWidth": 400,
+});
+
+        
+            
+                var html_b497269294ca8b405425b7ed5d6e9fbd = $(`<div id="html_b497269294ca8b405425b7ed5d6e9fbd" style="width: 100.0%; height: 100.0%;">         <div style="font-family: Arial; width: 350px;">         <h4 style="margin: 0 0 10px 0;">Ward_23 - Daund</h4>         <hr style="margin: 5px 0;">         <b>Stress Assessment:</b><br>         Stress Zone: <span style="color: #f39c12; font-weight: bold;">Medium Stress</span><br>         ESI Score: <b>0.320</b> (0-1 scale)<br>         <hr style="margin: 5px 0;">                  <b>Environmental Indicators:</b><br>         PM2.5: <b>37.1</b> µg/m³ (WHO limit: 35)<br>         Temperature: <b>28.2</b>°C<br>         Population Density: <b>5446</b> persons/km²<br>         Green Cover: <b>23.5%</b><br>         Vulnerable Population: <b>45.0%</b><br>         <hr style="margin: 5px 0;">                  <b>Geographic Location:</b><br>         Area: <b>Daund</b><br>         Population: <b>42,000</b><br>         Distance from City Center: <b>40.0 km</b><br>         Coordinates: (18.3450°N, 73.8100°E)<br>         <hr style="margin: 5px 0;">                  <b>Budget Allocation (3 Years):</b><br>         <span style="background: #e8f5e9; padding: 8px; display: block; margin: 5px 0; border-radius: 3px;">         Total: <b>₹5.84 Lakhs</b><br>         <span style="font-size: 0.9em;">         • Green Infrastructure: ₹2.04L<br>         • Pollution Control: ₹1.75L<br>         • Health Monitoring: ₹1.17L<br>         • Research: ₹0.88L         </span>         </span>         </div>         </div>`)[0];
+                popup_ab748735d174a0517403cdc3198780f5.setContent(html_b497269294ca8b405425b7ed5d6e9fbd);
+            
+        
+
+        circle_marker_dfa3cf0f9c8e46d1ee809d6c98650a6a.bindPopup(popup_ab748735d174a0517403cdc3198780f5)
+        ;
+
+        
+    
+    
+            circle_marker_dfa3cf0f9c8e46d1ee809d6c98650a6a.bindTooltip(
+                `<div>
+                     Ward_23 (Medium Stress, ESI: 0.320)
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+            var circle_marker_8325dbe20c5523a38c1b71c9fe636c2e = L.circleMarker(
+                [18.485, 73.91],
+                {"bubblingMouseEvents": true, "color": "#2ecc71", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#2ecc71", "fillOpacity": 0.8, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 0.9, "radius": 14.814614509698144, "stroke": true, "weight": 2}
+            ).addTo(map_d561194b256c254ed5cbe7e2f95dbad2);
+        
+    
+        var popup_2542798571d15f1562ef7b49bcd7ddb7 = L.popup({
+  "maxWidth": 400,
+});
+
+        
+            
+                var html_87aecd09f6da1a38b08eb61778760f3c = $(`<div id="html_87aecd09f6da1a38b08eb61778760f3c" style="width: 100.0%; height: 100.0%;">         <div style="font-family: Arial; width: 350px;">         <h4 style="margin: 0 0 10px 0;">Ward_24 - Pimpri</h4>         <hr style="margin: 5px 0;">         <b>Stress Assessment:</b><br>         Stress Zone: <span style="color: #2ecc71; font-weight: bold;">Low Stress</span><br>         ESI Score: <b>0.341</b> (0-1 scale)<br>         <hr style="margin: 5px 0;">                  <b>Environmental Indicators:</b><br>         PM2.5: <b>67.2</b> µg/m³ (WHO limit: 35)<br>         Temperature: <b>29.3</b>°C<br>         Population Density: <b>4354</b> persons/km²<br>         Green Cover: <b>28.1%</b><br>         Vulnerable Population: <b>16.1%</b><br>         <hr style="margin: 5px 0;">                  <b>Geographic Location:</b><br>         Area: <b>Pimpri</b><br>         Population: <b>33,000</b><br>         Distance from City Center: <b>6.5 km</b><br>         Coordinates: (18.4850°N, 73.9100°E)<br>         <hr style="margin: 5px 0;">                  <b>Budget Allocation (3 Years):</b><br>         <span style="background: #e8f5e9; padding: 8px; display: block; margin: 5px 0; border-radius: 3px;">         Total: <b>₹1.45 Lakhs</b><br>         <span style="font-size: 0.9em;">         • Green Infrastructure: ₹0.44L<br>         • Pollution Control: ₹0.29L<br>         • Health Monitoring: ₹0.44L<br>         • Research: ₹0.29L         </span>         </span>         </div>         </div>`)[0];
+                popup_2542798571d15f1562ef7b49bcd7ddb7.setContent(html_87aecd09f6da1a38b08eb61778760f3c);
+            
+        
+
+        circle_marker_8325dbe20c5523a38c1b71c9fe636c2e.bindPopup(popup_2542798571d15f1562ef7b49bcd7ddb7)
+        ;
+
+        
+    
+    
+            circle_marker_8325dbe20c5523a38c1b71c9fe636c2e.bindTooltip(
+                `<div>
+                     Ward_24 (Low Stress, ESI: 0.341)
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+            var circle_marker_85ab1385f24112dc68b56f71bb3d02b9 = L.circleMarker(
+                [18.335, 73.75],
+                {"bubblingMouseEvents": true, "color": "#2ecc71", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#2ecc71", "fillOpacity": 0.8, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 0.9, "radius": 15.51189173708875, "stroke": true, "weight": 2}
+            ).addTo(map_d561194b256c254ed5cbe7e2f95dbad2);
+        
+    
+        var popup_e36a433f86bb4e74fe07d040c0d49ba7 = L.popup({
+  "maxWidth": 400,
+});
+
+        
+            
+                var html_bc61591bb91f011ae66b44c62cdd3ba0 = $(`<div id="html_bc61591bb91f011ae66b44c62cdd3ba0" style="width: 100.0%; height: 100.0%;">         <div style="font-family: Arial; width: 350px;">         <h4 style="margin: 0 0 10px 0;">Ward_25 - Morgaon</h4>         <hr style="margin: 5px 0;">         <b>Stress Assessment:</b><br>         Stress Zone: <span style="color: #2ecc71; font-weight: bold;">Low Stress</span><br>         ESI Score: <b>0.376</b> (0-1 scale)<br>         <hr style="margin: 5px 0;">                  <b>Environmental Indicators:</b><br>         PM2.5: <b>75.3</b> µg/m³ (WHO limit: 35)<br>         Temperature: <b>32.0</b>°C<br>         Population Density: <b>2806</b> persons/km²<br>         Green Cover: <b>38.0%</b><br>         Vulnerable Population: <b>18.7%</b><br>         <hr style="margin: 5px 0;">                  <b>Geographic Location:</b><br>         Area: <b>Morgaon</b><br>         Population: <b>21,000</b><br>         Distance from City Center: <b>45.0 km</b><br>         Coordinates: (18.3350°N, 73.7500°E)<br>         <hr style="margin: 5px 0;">                  <b>Budget Allocation (3 Years):</b><br>         <span style="background: #e8f5e9; padding: 8px; display: block; margin: 5px 0; border-radius: 3px;">         Total: <b>₹0.94 Lakhs</b><br>         <span style="font-size: 0.9em;">         • Green Infrastructure: ₹0.28L<br>         • Pollution Control: ₹0.19L<br>         • Health Monitoring: ₹0.28L<br>         • Research: ₹0.19L         </span>         </span>         </div>         </div>`)[0];
+                popup_e36a433f86bb4e74fe07d040c0d49ba7.setContent(html_bc61591bb91f011ae66b44c62cdd3ba0);
+            
+        
+
+        circle_marker_85ab1385f24112dc68b56f71bb3d02b9.bindPopup(popup_e36a433f86bb4e74fe07d040c0d49ba7)
+        ;
+
+        
+    
+    
+            circle_marker_85ab1385f24112dc68b56f71bb3d02b9.bindTooltip(
+                `<div>
+                     Ward_25 (Low Stress, ESI: 0.376)
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+            var circle_marker_f1534656c2df885120c487160d7d7002 = L.circleMarker(
+                [18.555, 73.62],
+                {"bubblingMouseEvents": true, "color": "#2ecc71", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#2ecc71", "fillOpacity": 0.8, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 0.9, "radius": 14.815495547762819, "stroke": true, "weight": 2}
+            ).addTo(map_d561194b256c254ed5cbe7e2f95dbad2);
+        
+    
+        var popup_060e33a8b37ec742dfd4d249e5728f6a = L.popup({
+  "maxWidth": 400,
+});
+
+        
+            
+                var html_9b71e6483dbdd75ae41f24873d164dbe = $(`<div id="html_9b71e6483dbdd75ae41f24873d164dbe" style="width: 100.0%; height: 100.0%;">         <div style="font-family: Arial; width: 350px;">         <h4 style="margin: 0 0 10px 0;">Ward_26 - Bhhor</h4>         <hr style="margin: 5px 0;">         <b>Stress Assessment:</b><br>         Stress Zone: <span style="color: #2ecc71; font-weight: bold;">Low Stress</span><br>         ESI Score: <b>0.341</b> (0-1 scale)<br>         <hr style="margin: 5px 0;">                  <b>Environmental Indicators:</b><br>         PM2.5: <b>53.9</b> µg/m³ (WHO limit: 35)<br>         Temperature: <b>28.9</b>°C<br>         Population Density: <b>1470</b> persons/km²<br>         Green Cover: <b>15.5%</b><br>         Vulnerable Population: <b>29.3%</b><br>         <hr style="margin: 5px 0;">                  <b>Geographic Location:</b><br>         Area: <b>Bhhor</b><br>         Population: <b>11,000</b><br>         Distance from City Center: <b>35.0 km</b><br>         Coordinates: (18.5550°N, 73.6200°E)<br>         <hr style="margin: 5px 0;">                  <b>Budget Allocation (3 Years):</b><br>         <span style="background: #e8f5e9; padding: 8px; display: block; margin: 5px 0; border-radius: 3px;">         Total: <b>₹0.49 Lakhs</b><br>         <span style="font-size: 0.9em;">         • Green Infrastructure: ₹0.15L<br>         • Pollution Control: ₹0.10L<br>         • Health Monitoring: ₹0.15L<br>         • Research: ₹0.10L         </span>         </span>         </div>         </div>`)[0];
+                popup_060e33a8b37ec742dfd4d249e5728f6a.setContent(html_9b71e6483dbdd75ae41f24873d164dbe);
+            
+        
+
+        circle_marker_f1534656c2df885120c487160d7d7002.bindPopup(popup_060e33a8b37ec742dfd4d249e5728f6a)
+        ;
+
+        
+    
+    
+            circle_marker_f1534656c2df885120c487160d7d7002.bindTooltip(
+                `<div>
+                     Ward_26 (Low Stress, ESI: 0.341)
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+            var circle_marker_86146ec8ef552e107f7798642579b9d2 = L.circleMarker(
+                [18.285, 73.77],
+                {"bubblingMouseEvents": true, "color": "#2ecc71", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#2ecc71", "fillOpacity": 0.8, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 0.9, "radius": 14.049597050797667, "stroke": true, "weight": 2}
+            ).addTo(map_d561194b256c254ed5cbe7e2f95dbad2);
+        
+    
+        var popup_de3b3749b3e647f32a113d0900c1fbfd = L.popup({
+  "maxWidth": 400,
+});
+
+        
+            
+                var html_a79e8fe354306384383babade80eb7f1 = $(`<div id="html_a79e8fe354306384383babade80eb7f1" style="width: 100.0%; height: 100.0%;">         <div style="font-family: Arial; width: 350px;">         <h4 style="margin: 0 0 10px 0;">Ward_27 - Pen</h4>         <hr style="margin: 5px 0;">         <b>Stress Assessment:</b><br>         Stress Zone: <span style="color: #2ecc71; font-weight: bold;">Low Stress</span><br>         ESI Score: <b>0.302</b> (0-1 scale)<br>         <hr style="margin: 5px 0;">                  <b>Environmental Indicators:</b><br>         PM2.5: <b>70.0</b> µg/m³ (WHO limit: 35)<br>         Temperature: <b>29.0</b>°C<br>         Population Density: <b>3607</b> persons/km²<br>         Green Cover: <b>36.3%</b><br>         Vulnerable Population: <b>20.5%</b><br>         <hr style="margin: 5px 0;">                  <b>Geographic Location:</b><br>         Area: <b>Pen</b><br>         Population: <b>28,000</b><br>         Distance from City Center: <b>48.0 km</b><br>         Coordinates: (18.2850°N, 73.7700°E)<br>         <hr style="margin: 5px 0;">                  <b>Budget Allocation (3 Years):</b><br>         <span style="background: #e8f5e9; padding: 8px; display: block; margin: 5px 0; border-radius: 3px;">         Total: <b>₹1.20 Lakhs</b><br>         <span style="font-size: 0.9em;">         • Green Infrastructure: ₹0.36L<br>         • Pollution Control: ₹0.24L<br>         • Health Monitoring: ₹0.36L<br>         • Research: ₹0.24L         </span>         </span>         </div>         </div>`)[0];
+                popup_de3b3749b3e647f32a113d0900c1fbfd.setContent(html_a79e8fe354306384383babade80eb7f1);
+            
+        
+
+        circle_marker_86146ec8ef552e107f7798642579b9d2.bindPopup(popup_de3b3749b3e647f32a113d0900c1fbfd)
+        ;
+
+        
+    
+    
+            circle_marker_86146ec8ef552e107f7798642579b9d2.bindTooltip(
+                `<div>
+                     Ward_27 (Low Stress, ESI: 0.302)
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+            var circle_marker_7321b949467f36a1f23e001a5793bb2b = L.circleMarker(
+                [18.415, 73.7],
+                {"bubblingMouseEvents": true, "color": "#2ecc71", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#2ecc71", "fillOpacity": 0.8, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 0.9, "radius": 15.269489059260385, "stroke": true, "weight": 2}
+            ).addTo(map_d561194b256c254ed5cbe7e2f95dbad2);
+        
+    
+        var popup_c81b3df8447b15758ac0b805c939f50a = L.popup({
+  "maxWidth": 400,
+});
+
+        
+            
+                var html_36dd6dd4fea84380d0208ba869555fc6 = $(`<div id="html_36dd6dd4fea84380d0208ba869555fc6" style="width: 100.0%; height: 100.0%;">         <div style="font-family: Arial; width: 350px;">         <h4 style="margin: 0 0 10px 0;">Ward_28 - Ozar</h4>         <hr style="margin: 5px 0;">         <b>Stress Assessment:</b><br>         Stress Zone: <span style="color: #2ecc71; font-weight: bold;">Low Stress</span><br>         ESI Score: <b>0.363</b> (0-1 scale)<br>         <hr style="margin: 5px 0;">                  <b>Environmental Indicators:</b><br>         PM2.5: <b>60.4</b> µg/m³ (WHO limit: 35)<br>         Temperature: <b>28.4</b>°C<br>         Population Density: <b>6213</b> persons/km²<br>         Green Cover: <b>27.1%</b><br>         Vulnerable Population: <b>26.3%</b><br>         <hr style="margin: 5px 0;">                  <b>Geographic Location:</b><br>         Area: <b>Ozar</b><br>         Population: <b>48,000</b><br>         Distance from City Center: <b>42.0 km</b><br>         Coordinates: (18.4150°N, 73.7000°E)<br>         <hr style="margin: 5px 0;">                  <b>Budget Allocation (3 Years):</b><br>         <span style="background: #e8f5e9; padding: 8px; display: block; margin: 5px 0; border-radius: 3px;">         Total: <b>₹2.07 Lakhs</b><br>         <span style="font-size: 0.9em;">         • Green Infrastructure: ₹0.62L<br>         • Pollution Control: ₹0.41L<br>         • Health Monitoring: ₹0.62L<br>         • Research: ₹0.41L         </span>         </span>         </div>         </div>`)[0];
+                popup_c81b3df8447b15758ac0b805c939f50a.setContent(html_36dd6dd4fea84380d0208ba869555fc6);
+            
+        
+
+        circle_marker_7321b949467f36a1f23e001a5793bb2b.bindPopup(popup_c81b3df8447b15758ac0b805c939f50a)
+        ;
+
+        
+    
+    
+            circle_marker_7321b949467f36a1f23e001a5793bb2b.bindTooltip(
+                `<div>
+                     Ward_28 (Low Stress, ESI: 0.363)
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+            var circle_marker_0f984ee12a792bf2cecec9761d4cc868 = L.circleMarker(
+                [18.645, 73.62],
+                {"bubblingMouseEvents": true, "color": "#f39c12", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#f39c12", "fillOpacity": 0.8, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 0.9, "radius": 13.279275011447947, "stroke": true, "weight": 2}
+            ).addTo(map_d561194b256c254ed5cbe7e2f95dbad2);
+        
+    
+        var popup_418d857d2b2f8b57dd0cbb3f225b385d = L.popup({
+  "maxWidth": 400,
+});
+
+        
+            
+                var html_3766e76ca2bf5db8bdf71aafe3ad7e0d = $(`<div id="html_3766e76ca2bf5db8bdf71aafe3ad7e0d" style="width: 100.0%; height: 100.0%;">         <div style="font-family: Arial; width: 350px;">         <h4 style="margin: 0 0 10px 0;">Ward_29 - Velha</h4>         <hr style="margin: 5px 0;">         <b>Stress Assessment:</b><br>         Stress Zone: <span style="color: #f39c12; font-weight: bold;">Medium Stress</span><br>         ESI Score: <b>0.264</b> (0-1 scale)<br>         <hr style="margin: 5px 0;">                  <b>Environmental Indicators:</b><br>         PM2.5: <b>45.3</b> µg/m³ (WHO limit: 35)<br>         Temperature: <b>26.0</b>°C<br>         Population Density: <b>4928</b> persons/km²<br>         Green Cover: <b>19.1%</b><br>         Vulnerable Population: <b>25.4%</b><br>         <hr style="margin: 5px 0;">                  <b>Geographic Location:</b><br>         Area: <b>Velha</b><br>         Population: <b>38,000</b><br>         Distance from City Center: <b>50.0 km</b><br>         Coordinates: (18.6450°N, 73.6200°E)<br>         <hr style="margin: 5px 0;">                  <b>Budget Allocation (3 Years):</b><br>         <span style="background: #e8f5e9; padding: 8px; display: block; margin: 5px 0; border-radius: 3px;">         Total: <b>₹4.74 Lakhs</b><br>         <span style="font-size: 0.9em;">         • Green Infrastructure: ₹1.66L<br>         • Pollution Control: ₹1.42L<br>         • Health Monitoring: ₹0.95L<br>         • Research: ₹0.71L         </span>         </span>         </div>         </div>`)[0];
+                popup_418d857d2b2f8b57dd0cbb3f225b385d.setContent(html_3766e76ca2bf5db8bdf71aafe3ad7e0d);
+            
+        
+
+        circle_marker_0f984ee12a792bf2cecec9761d4cc868.bindPopup(popup_418d857d2b2f8b57dd0cbb3f225b385d)
+        ;
+
+        
+    
+    
+            circle_marker_0f984ee12a792bf2cecec9761d4cc868.bindTooltip(
+                `<div>
+                     Ward_29 (Medium Stress, ESI: 0.264)
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+            var circle_marker_0435561854cbd1810c8f5c834ac86e39 = L.circleMarker(
+                [18.725, 73.78],
+                {"bubblingMouseEvents": true, "color": "#2ecc71", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#2ecc71", "fillOpacity": 0.8, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 0.9, "radius": 13.728989891625957, "stroke": true, "weight": 2}
+            ).addTo(map_d561194b256c254ed5cbe7e2f95dbad2);
+        
+    
+        var popup_fdd7e3b4c9f8b14245b98ad792fd8aa3 = L.popup({
+  "maxWidth": 400,
+});
+
+        
+            
+                var html_afd1f1a963b088842b0c30a9c083ba21 = $(`<div id="html_afd1f1a963b088842b0c30a9c083ba21" style="width: 100.0%; height: 100.0%;">         <div style="font-family: Arial; width: 350px;">         <h4 style="margin: 0 0 10px 0;">Ward_30 - Mahabaleshwar</h4>         <hr style="margin: 5px 0;">         <b>Stress Assessment:</b><br>         Stress Zone: <span style="color: #2ecc71; font-weight: bold;">Low Stress</span><br>         ESI Score: <b>0.286</b> (0-1 scale)<br>         <hr style="margin: 5px 0;">                  <b>Environmental Indicators:</b><br>         PM2.5: <b>60.4</b> µg/m³ (WHO limit: 35)<br>         Temperature: <b>28.4</b>°C<br>         Population Density: <b>2009</b> persons/km²<br>         Green Cover: <b>30.7%</b><br>         Vulnerable Population: <b>30.9%</b><br>         <hr style="margin: 5px 0;">                  <b>Geographic Location:</b><br>         Area: <b>Mahabaleshwar</b><br>         Population: <b>15,000</b><br>         Distance from City Center: <b>55.0 km</b><br>         Coordinates: (18.7250°N, 73.7800°E)<br>         <hr style="margin: 5px 0;">                  <b>Budget Allocation (3 Years):</b><br>         <span style="background: #e8f5e9; padding: 8px; display: block; margin: 5px 0; border-radius: 3px;">         Total: <b>₹0.67 Lakhs</b><br>         <span style="font-size: 0.9em;">         • Green Infrastructure: ₹0.20L<br>         • Pollution Control: ₹0.13L<br>         • Health Monitoring: ₹0.20L<br>         • Research: ₹0.13L         </span>         </span>         </div>         </div>`)[0];
+                popup_fdd7e3b4c9f8b14245b98ad792fd8aa3.setContent(html_afd1f1a963b088842b0c30a9c083ba21);
+            
+        
+
+        circle_marker_0435561854cbd1810c8f5c834ac86e39.bindPopup(popup_fdd7e3b4c9f8b14245b98ad792fd8aa3)
+        ;
+
+        
+    
+    
+            circle_marker_0435561854cbd1810c8f5c834ac86e39.bindTooltip(
+                `<div>
+                     Ward_30 (Low Stress, ESI: 0.286)
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+            var circle_marker_37744c682fe8fd91d6d639cbcfd49ea6 = L.circleMarker(
+                [18.575, 73.92],
+                {"bubblingMouseEvents": true, "color": "#2ecc71", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#2ecc71", "fillOpacity": 0.8, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 0.9, "radius": 16.3764461033213, "stroke": true, "weight": 2}
+            ).addTo(map_d561194b256c254ed5cbe7e2f95dbad2);
+        
+    
+        var popup_799da2404efe43cda48e7f5bfbad50f3 = L.popup({
+  "maxWidth": 400,
+});
+
+        
+            
+                var html_05f4992eec71ea1e6c1ec617c49cf751 = $(`<div id="html_05f4992eec71ea1e6c1ec617c49cf751" style="width: 100.0%; height: 100.0%;">         <div style="font-family: Arial; width: 350px;">         <h4 style="margin: 0 0 10px 0;">Ward_31 - Murbad</h4>         <hr style="margin: 5px 0;">         <b>Stress Assessment:</b><br>         Stress Zone: <span style="color: #2ecc71; font-weight: bold;">Low Stress</span><br>         ESI Score: <b>0.419</b> (0-1 scale)<br>         <hr style="margin: 5px 0;">                  <b>Environmental Indicators:</b><br>         PM2.5: <b>78.1</b> µg/m³ (WHO limit: 35)<br>         Temperature: <b>28.6</b>°C<br>         Population Density: <b>4846</b> persons/km²<br>         Green Cover: <b>28.6%</b><br>         Vulnerable Population: <b>27.5%</b><br>         <hr style="margin: 5px 0;">                  <b>Geographic Location:</b><br>         Area: <b>Murbad</b><br>         Population: <b>37,000</b><br>         Distance from City Center: <b>45.0 km</b><br>         Coordinates: (18.5750°N, 73.9200°E)<br>         <hr style="margin: 5px 0;">                  <b>Budget Allocation (3 Years):</b><br>         <span style="background: #e8f5e9; padding: 8px; display: block; margin: 5px 0; border-radius: 3px;">         Total: <b>₹1.62 Lakhs</b><br>         <span style="font-size: 0.9em;">         • Green Infrastructure: ₹0.48L<br>         • Pollution Control: ₹0.32L<br>         • Health Monitoring: ₹0.48L<br>         • Research: ₹0.32L         </span>         </span>         </div>         </div>`)[0];
+                popup_799da2404efe43cda48e7f5bfbad50f3.setContent(html_05f4992eec71ea1e6c1ec617c49cf751);
+            
+        
+
+        circle_marker_37744c682fe8fd91d6d639cbcfd49ea6.bindPopup(popup_799da2404efe43cda48e7f5bfbad50f3)
+        ;
+
+        
+    
+    
+            circle_marker_37744c682fe8fd91d6d639cbcfd49ea6.bindTooltip(
+                `<div>
+                     Ward_31 (Low Stress, ESI: 0.419)
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+            var circle_marker_f60e12e22af64c1f25c3db06600e3a2a = L.circleMarker(
+                [18.365, 73.65],
+                {"bubblingMouseEvents": true, "color": "#2ecc71", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#2ecc71", "fillOpacity": 0.8, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 0.9, "radius": 17.324875487030248, "stroke": true, "weight": 2}
+            ).addTo(map_d561194b256c254ed5cbe7e2f95dbad2);
+        
+    
+        var popup_c92311b6631d99f2e744d3b718418475 = L.popup({
+  "maxWidth": 400,
+});
+
+        
+            
+                var html_7ddd262fa2041ce5692eabfc6c511a3d = $(`<div id="html_7ddd262fa2041ce5692eabfc6c511a3d" style="width: 100.0%; height: 100.0%;">         <div style="font-family: Arial; width: 350px;">         <h4 style="margin: 0 0 10px 0;">Ward_32 - Kanhe</h4>         <hr style="margin: 5px 0;">         <b>Stress Assessment:</b><br>         Stress Zone: <span style="color: #2ecc71; font-weight: bold;">Low Stress</span><br>         ESI Score: <b>0.466</b> (0-1 scale)<br>         <hr style="margin: 5px 0;">                  <b>Environmental Indicators:</b><br>         PM2.5: <b>54.5</b> µg/m³ (WHO limit: 35)<br>         Temperature: <b>32.0</b>°C<br>         Population Density: <b>5271</b> persons/km²<br>         Green Cover: <b>22.2%</b><br>         Vulnerable Population: <b>36.0%</b><br>         <hr style="margin: 5px 0;">                  <b>Geographic Location:</b><br>         Area: <b>Kanhe</b><br>         Population: <b>40,000</b><br>         Distance from City Center: <b>48.0 km</b><br>         Coordinates: (18.3650°N, 73.6500°E)<br>         <hr style="margin: 5px 0;">                  <b>Budget Allocation (3 Years):</b><br>         <span style="background: #e8f5e9; padding: 8px; display: block; margin: 5px 0; border-radius: 3px;">         Total: <b>₹1.76 Lakhs</b><br>         <span style="font-size: 0.9em;">         • Green Infrastructure: ₹0.53L<br>         • Pollution Control: ₹0.35L<br>         • Health Monitoring: ₹0.53L<br>         • Research: ₹0.35L         </span>         </span>         </div>         </div>`)[0];
+                popup_c92311b6631d99f2e744d3b718418475.setContent(html_7ddd262fa2041ce5692eabfc6c511a3d);
+            
+        
+
+        circle_marker_f60e12e22af64c1f25c3db06600e3a2a.bindPopup(popup_c92311b6631d99f2e744d3b718418475)
+        ;
+
+        
+    
+    
+            circle_marker_f60e12e22af64c1f25c3db06600e3a2a.bindTooltip(
+                `<div>
+                     Ward_32 (Low Stress, ESI: 0.466)
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+            var circle_marker_a5a794d3124405663b66604ad18050c0 = L.circleMarker(
+                [18.425, 73.82],
+                {"bubblingMouseEvents": true, "color": "#2ecc71", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#2ecc71", "fillOpacity": 0.8, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 0.9, "radius": 14.518762752967824, "stroke": true, "weight": 2}
+            ).addTo(map_d561194b256c254ed5cbe7e2f95dbad2);
+        
+    
+        var popup_7f032cac74f62466f354ddc68278b31d = L.popup({
+  "maxWidth": 400,
+});
+
+        
+            
+                var html_5c1667e6d735c39262484039952b8980 = $(`<div id="html_5c1667e6d735c39262484039952b8980" style="width: 100.0%; height: 100.0%;">         <div style="font-family: Arial; width: 350px;">         <h4 style="margin: 0 0 10px 0;">Ward_33 - Katraj</h4>         <hr style="margin: 5px 0;">         <b>Stress Assessment:</b><br>         Stress Zone: <span style="color: #2ecc71; font-weight: bold;">Low Stress</span><br>         ESI Score: <b>0.326</b> (0-1 scale)<br>         <hr style="margin: 5px 0;">                  <b>Environmental Indicators:</b><br>         PM2.5: <b>78.5</b> µg/m³ (WHO limit: 35)<br>         Temperature: <b>28.1</b>°C<br>         Population Density: <b>2732</b> persons/km²<br>         Green Cover: <b>27.6%</b><br>         Vulnerable Population: <b>14.1%</b><br>         <hr style="margin: 5px 0;">                  <b>Geographic Location:</b><br>         Area: <b>Katraj</b><br>         Population: <b>21,000</b><br>         Distance from City Center: <b>12.0 km</b><br>         Coordinates: (18.4250°N, 73.8200°E)<br>         <hr style="margin: 5px 0;">                  <b>Budget Allocation (3 Years):</b><br>         <span style="background: #e8f5e9; padding: 8px; display: block; margin: 5px 0; border-radius: 3px;">         Total: <b>₹0.91 Lakhs</b><br>         <span style="font-size: 0.9em;">         • Green Infrastructure: ₹0.27L<br>         • Pollution Control: ₹0.18L<br>         • Health Monitoring: ₹0.27L<br>         • Research: ₹0.18L         </span>         </span>         </div>         </div>`)[0];
+                popup_7f032cac74f62466f354ddc68278b31d.setContent(html_5c1667e6d735c39262484039952b8980);
+            
+        
+
+        circle_marker_a5a794d3124405663b66604ad18050c0.bindPopup(popup_7f032cac74f62466f354ddc68278b31d)
+        ;
+
+        
+    
+    
+            circle_marker_a5a794d3124405663b66604ad18050c0.bindTooltip(
+                `<div>
+                     Ward_33 (Low Stress, ESI: 0.326)
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+            var circle_marker_26ae58027e1b36277c346f66e7cb91f1 = L.circleMarker(
+                [18.465, 73.945],
+                {"bubblingMouseEvents": true, "color": "#2ecc71", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#2ecc71", "fillOpacity": 0.8, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 0.9, "radius": 12.835500569667797, "stroke": true, "weight": 2}
+            ).addTo(map_d561194b256c254ed5cbe7e2f95dbad2);
+        
+    
+        var popup_57a2fc69a1c8e867cc3c0a81335ec8ca = L.popup({
+  "maxWidth": 400,
+});
+
+        
+            
+                var html_dea609cda6b86743b23fe4b528f03924 = $(`<div id="html_dea609cda6b86743b23fe4b528f03924" style="width: 100.0%; height: 100.0%;">         <div style="font-family: Arial; width: 350px;">         <h4 style="margin: 0 0 10px 0;">Ward_34 - Wagholi</h4>         <hr style="margin: 5px 0;">         <b>Stress Assessment:</b><br>         Stress Zone: <span style="color: #2ecc71; font-weight: bold;">Low Stress</span><br>         ESI Score: <b>0.242</b> (0-1 scale)<br>         <hr style="margin: 5px 0;">                  <b>Environmental Indicators:</b><br>         PM2.5: <b>35.0</b> µg/m³ (WHO limit: 35)<br>         Temperature: <b>29.1</b>°C<br>         Population Density: <b>4807</b> persons/km²<br>         Green Cover: <b>23.9%</b><br>         Vulnerable Population: <b>18.6%</b><br>         <hr style="margin: 5px 0;">                  <b>Geographic Location:</b><br>         Area: <b>Wagholi</b><br>         Population: <b>37,000</b><br>         Distance from City Center: <b>10.0 km</b><br>         Coordinates: (18.4650°N, 73.9450°E)<br>         <hr style="margin: 5px 0;">                  <b>Budget Allocation (3 Years):</b><br>         <span style="background: #e8f5e9; padding: 8px; display: block; margin: 5px 0; border-radius: 3px;">         Total: <b>₹1.60 Lakhs</b><br>         <span style="font-size: 0.9em;">         • Green Infrastructure: ₹0.48L<br>         • Pollution Control: ₹0.32L<br>         • Health Monitoring: ₹0.48L<br>         • Research: ₹0.32L         </span>         </span>         </div>         </div>`)[0];
+                popup_57a2fc69a1c8e867cc3c0a81335ec8ca.setContent(html_dea609cda6b86743b23fe4b528f03924);
+            
+        
+
+        circle_marker_26ae58027e1b36277c346f66e7cb91f1.bindPopup(popup_57a2fc69a1c8e867cc3c0a81335ec8ca)
+        ;
+
+        
+    
+    
+            circle_marker_26ae58027e1b36277c346f66e7cb91f1.bindTooltip(
+                `<div>
+                     Ward_34 (Low Stress, ESI: 0.242)
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+            var circle_marker_f9d841e520e24b5686725a211eec2d57 = L.circleMarker(
+                [18.525, 73.945],
+                {"bubblingMouseEvents": true, "color": "#2ecc71", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#2ecc71", "fillOpacity": 0.8, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 0.9, "radius": 15.056177895322136, "stroke": true, "weight": 2}
+            ).addTo(map_d561194b256c254ed5cbe7e2f95dbad2);
+        
+    
+        var popup_f35796638112576d966ced91437a0da1 = L.popup({
+  "maxWidth": 400,
+});
+
+        
+            
+                var html_d21265307e42feace212515a30e37621 = $(`<div id="html_d21265307e42feace212515a30e37621" style="width: 100.0%; height: 100.0%;">         <div style="font-family: Arial; width: 350px;">         <h4 style="margin: 0 0 10px 0;">Ward_35 - Kalyani Nagar</h4>         <hr style="margin: 5px 0;">         <b>Stress Assessment:</b><br>         Stress Zone: <span style="color: #2ecc71; font-weight: bold;">Low Stress</span><br>         ESI Score: <b>0.353</b> (0-1 scale)<br>         <hr style="margin: 5px 0;">                  <b>Environmental Indicators:</b><br>         PM2.5: <b>67.3</b> µg/m³ (WHO limit: 35)<br>         Temperature: <b>28.4</b>°C<br>         Population Density: <b>4616</b> persons/km²<br>         Green Cover: <b>27.9%</b><br>         Vulnerable Population: <b>24.9%</b><br>         <hr style="margin: 5px 0;">                  <b>Geographic Location:</b><br>         Area: <b>Kalyani Nagar</b><br>         Population: <b>35,000</b><br>         Distance from City Center: <b>3.5 km</b><br>         Coordinates: (18.5250°N, 73.9450°E)<br>         <hr style="margin: 5px 0;">                  <b>Budget Allocation (3 Years):</b><br>         <span style="background: #e8f5e9; padding: 8px; display: block; margin: 5px 0; border-radius: 3px;">         Total: <b>₹1.54 Lakhs</b><br>         <span style="font-size: 0.9em;">         • Green Infrastructure: ₹0.46L<br>         • Pollution Control: ₹0.31L<br>         • Health Monitoring: ₹0.46L<br>         • Research: ₹0.31L         </span>         </span>         </div>         </div>`)[0];
+                popup_f35796638112576d966ced91437a0da1.setContent(html_d21265307e42feace212515a30e37621);
+            
+        
+
+        circle_marker_f9d841e520e24b5686725a211eec2d57.bindPopup(popup_f35796638112576d966ced91437a0da1)
+        ;
+
+        
+    
+    
+            circle_marker_f9d841e520e24b5686725a211eec2d57.bindTooltip(
+                `<div>
+                     Ward_35 (Low Stress, ESI: 0.353)
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+            var circle_marker_34112bec49381ae0562e5c3066bcf377 = L.circleMarker(
+                [18.395, 73.75],
+                {"bubblingMouseEvents": true, "color": "#2ecc71", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#2ecc71", "fillOpacity": 0.8, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 0.9, "radius": 12.404274124573373, "stroke": true, "weight": 2}
+            ).addTo(map_d561194b256c254ed5cbe7e2f95dbad2);
+        
+    
+        var popup_4af2aaca8e0ba8d115a75a414297e5ee = L.popup({
+  "maxWidth": 400,
+});
+
+        
+            
+                var html_782f24d1c5473b989490153eecfc8f7a = $(`<div id="html_782f24d1c5473b989490153eecfc8f7a" style="width: 100.0%; height: 100.0%;">         <div style="font-family: Arial; width: 350px;">         <h4 style="margin: 0 0 10px 0;">Ward_36 - Sinhagad</h4>         <hr style="margin: 5px 0;">         <b>Stress Assessment:</b><br>         Stress Zone: <span style="color: #2ecc71; font-weight: bold;">Low Stress</span><br>         ESI Score: <b>0.220</b> (0-1 scale)<br>         <hr style="margin: 5px 0;">                  <b>Environmental Indicators:</b><br>         PM2.5: <b>56.3</b> µg/m³ (WHO limit: 35)<br>         Temperature: <b>26.2</b>°C<br>         Population Density: <b>2214</b> persons/km²<br>         Green Cover: <b>32.3%</b><br>         Vulnerable Population: <b>31.0%</b><br>         <hr style="margin: 5px 0;">                  <b>Geographic Location:</b><br>         Area: <b>Sinhagad</b><br>         Population: <b>17,000</b><br>         Distance from City Center: <b>18.0 km</b><br>         Coordinates: (18.3950°N, 73.7500°E)<br>         <hr style="margin: 5px 0;">                  <b>Budget Allocation (3 Years):</b><br>         <span style="background: #e8f5e9; padding: 8px; display: block; margin: 5px 0; border-radius: 3px;">         Total: <b>₹0.74 Lakhs</b><br>         <span style="font-size: 0.9em;">         • Green Infrastructure: ₹0.22L<br>         • Pollution Control: ₹0.15L<br>         • Health Monitoring: ₹0.22L<br>         • Research: ₹0.15L         </span>         </span>         </div>         </div>`)[0];
+                popup_4af2aaca8e0ba8d115a75a414297e5ee.setContent(html_782f24d1c5473b989490153eecfc8f7a);
+            
+        
+
+        circle_marker_34112bec49381ae0562e5c3066bcf377.bindPopup(popup_4af2aaca8e0ba8d115a75a414297e5ee)
+        ;
+
+        
+    
+    
+            circle_marker_34112bec49381ae0562e5c3066bcf377.bindTooltip(
+                `<div>
+                     Ward_36 (Low Stress, ESI: 0.220)
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+            var circle_marker_b5ce84180860ccea6408ff1493965020 = L.circleMarker(
+                [18.665, 73.75],
+                {"bubblingMouseEvents": true, "color": "#2ecc71", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#2ecc71", "fillOpacity": 0.8, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 0.9, "radius": 13.36377357023937, "stroke": true, "weight": 2}
+            ).addTo(map_d561194b256c254ed5cbe7e2f95dbad2);
+        
+    
+        var popup_95f5a886637fe3b69bf9460f1339edc0 = L.popup({
+  "maxWidth": 400,
+});
+
+        
+            
+                var html_6980ea47c7c6127e7675e1f802b16dba = $(`<div id="html_6980ea47c7c6127e7675e1f802b16dba" style="width: 100.0%; height: 100.0%;">         <div style="font-family: Arial; width: 350px;">         <h4 style="margin: 0 0 10px 0;">Ward_37 - Ambegaon East</h4>         <hr style="margin: 5px 0;">         <b>Stress Assessment:</b><br>         Stress Zone: <span style="color: #2ecc71; font-weight: bold;">Low Stress</span><br>         ESI Score: <b>0.268</b> (0-1 scale)<br>         <hr style="margin: 5px 0;">                  <b>Environmental Indicators:</b><br>         PM2.5: <b>50.5</b> µg/m³ (WHO limit: 35)<br>         Temperature: <b>30.8</b>°C<br>         Population Density: <b>5216</b> persons/km²<br>         Green Cover: <b>38.0%</b><br>         Vulnerable Population: <b>21.9%</b><br>         <hr style="margin: 5px 0;">                  <b>Geographic Location:</b><br>         Area: <b>Ambegaon East</b><br>         Population: <b>40,000</b><br>         Distance from City Center: <b>32.0 km</b><br>         Coordinates: (18.6650°N, 73.7500°E)<br>         <hr style="margin: 5px 0;">                  <b>Budget Allocation (3 Years):</b><br>         <span style="background: #e8f5e9; padding: 8px; display: block; margin: 5px 0; border-radius: 3px;">         Total: <b>₹1.74 Lakhs</b><br>         <span style="font-size: 0.9em;">         • Green Infrastructure: ₹0.52L<br>         • Pollution Control: ₹0.35L<br>         • Health Monitoring: ₹0.52L<br>         • Research: ₹0.35L         </span>         </span>         </div>         </div>`)[0];
+                popup_95f5a886637fe3b69bf9460f1339edc0.setContent(html_6980ea47c7c6127e7675e1f802b16dba);
+            
+        
+
+        circle_marker_b5ce84180860ccea6408ff1493965020.bindPopup(popup_95f5a886637fe3b69bf9460f1339edc0)
+        ;
+
+        
+    
+    
+            circle_marker_b5ce84180860ccea6408ff1493965020.bindTooltip(
+                `<div>
+                     Ward_37 (Low Stress, ESI: 0.268)
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+            var circle_marker_b510eea227fdfad45b7527431816b432 = L.circleMarker(
+                [18.605, 73.62],
+                {"bubblingMouseEvents": true, "color": "#2ecc71", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#2ecc71", "fillOpacity": 0.8, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 0.9, "radius": 16.0235497974486, "stroke": true, "weight": 2}
+            ).addTo(map_d561194b256c254ed5cbe7e2f95dbad2);
+        
+    
+        var popup_dcfb08c0b4e43236e56a4d03b402ad38 = L.popup({
+  "maxWidth": 400,
+});
+
+        
+            
+                var html_d20b4f4f9a960f00086b402f951853ca = $(`<div id="html_d20b4f4f9a960f00086b402f951853ca" style="width: 100.0%; height: 100.0%;">         <div style="font-family: Arial; width: 350px;">         <h4 style="margin: 0 0 10px 0;">Ward_38 - Kondhwa</h4>         <hr style="margin: 5px 0;">         <b>Stress Assessment:</b><br>         Stress Zone: <span style="color: #2ecc71; font-weight: bold;">Low Stress</span><br>         ESI Score: <b>0.401</b> (0-1 scale)<br>         <hr style="margin: 5px 0;">                  <b>Environmental Indicators:</b><br>         PM2.5: <b>56.4</b> µg/m³ (WHO limit: 35)<br>         Temperature: <b>30.0</b>°C<br>         Population Density: <b>5622</b> persons/km²<br>         Green Cover: <b>17.1%</b><br>         Vulnerable Population: <b>23.4%</b><br>         <hr style="margin: 5px 0;">                  <b>Geographic Location:</b><br>         Area: <b>Kondhwa</b><br>         Population: <b>43,000</b><br>         Distance from City Center: <b>20.0 km</b><br>         Coordinates: (18.6050°N, 73.6200°E)<br>         <hr style="margin: 5px 0;">                  <b>Budget Allocation (3 Years):</b><br>         <span style="background: #e8f5e9; padding: 8px; display: block; margin: 5px 0; border-radius: 3px;">         Total: <b>₹1.87 Lakhs</b><br>         <span style="font-size: 0.9em;">         • Green Infrastructure: ₹0.56L<br>         • Pollution Control: ₹0.37L<br>         • Health Monitoring: ₹0.56L<br>         • Research: ₹0.37L         </span>         </span>         </div>         </div>`)[0];
+                popup_dcfb08c0b4e43236e56a4d03b402ad38.setContent(html_d20b4f4f9a960f00086b402f951853ca);
+            
+        
+
+        circle_marker_b510eea227fdfad45b7527431816b432.bindPopup(popup_dcfb08c0b4e43236e56a4d03b402ad38)
+        ;
+
+        
+    
+    
+            circle_marker_b510eea227fdfad45b7527431816b432.bindTooltip(
+                `<div>
+                     Ward_38 (Low Stress, ESI: 0.401)
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+            var circle_marker_2c8322ec1b3af91f67411d9b5f771c48 = L.circleMarker(
+                [18.445, 73.655],
+                {"bubblingMouseEvents": true, "color": "#2ecc71", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#2ecc71", "fillOpacity": 0.8, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 0.9, "radius": 12.729330512008353, "stroke": true, "weight": 2}
+            ).addTo(map_d561194b256c254ed5cbe7e2f95dbad2);
+        
+    
+        var popup_740f59fbbe5cedca5299e7792bbfba61 = L.popup({
+  "maxWidth": 400,
+});
+
+        
+            
+                var html_8989111dccd124377ba2d97c6d85160c = $(`<div id="html_8989111dccd124377ba2d97c6d85160c" style="width: 100.0%; height: 100.0%;">         <div style="font-family: Arial; width: 350px;">         <h4 style="margin: 0 0 10px 0;">Ward_39 - Undri</h4>         <hr style="margin: 5px 0;">         <b>Stress Assessment:</b><br>         Stress Zone: <span style="color: #2ecc71; font-weight: bold;">Low Stress</span><br>         ESI Score: <b>0.236</b> (0-1 scale)<br>         <hr style="margin: 5px 0;">                  <b>Environmental Indicators:</b><br>         PM2.5: <b>35.0</b> µg/m³ (WHO limit: 35)<br>         Temperature: <b>30.1</b>°C<br>         Population Density: <b>6666</b> persons/km²<br>         Green Cover: <b>38.0%</b><br>         Vulnerable Population: <b>26.5%</b><br>         <hr style="margin: 5px 0;">                  <b>Geographic Location:</b><br>         Area: <b>Undri</b><br>         Population: <b>51,000</b><br>         Distance from City Center: <b>22.0 km</b><br>         Coordinates: (18.4450°N, 73.6550°E)<br>         <hr style="margin: 5px 0;">                  <b>Budget Allocation (3 Years):</b><br>         <span style="background: #e8f5e9; padding: 8px; display: block; margin: 5px 0; border-radius: 3px;">         Total: <b>₹2.22 Lakhs</b><br>         <span style="font-size: 0.9em;">         • Green Infrastructure: ₹0.67L<br>         • Pollution Control: ₹0.44L<br>         • Health Monitoring: ₹0.67L<br>         • Research: ₹0.44L         </span>         </span>         </div>         </div>`)[0];
+                popup_740f59fbbe5cedca5299e7792bbfba61.setContent(html_8989111dccd124377ba2d97c6d85160c);
+            
+        
+
+        circle_marker_2c8322ec1b3af91f67411d9b5f771c48.bindPopup(popup_740f59fbbe5cedca5299e7792bbfba61)
+        ;
+
+        
+    
+    
+            circle_marker_2c8322ec1b3af91f67411d9b5f771c48.bindTooltip(
+                `<div>
+                     Ward_39 (Low Stress, ESI: 0.236)
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+            var circle_marker_819e5d1b2c8c2095893c651a1d4f03d3 = L.circleMarker(
+                [18.715, 73.8],
+                {"bubblingMouseEvents": true, "color": "#f39c12", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#f39c12", "fillOpacity": 0.8, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 0.9, "radius": 15.868916125810442, "stroke": true, "weight": 2}
+            ).addTo(map_d561194b256c254ed5cbe7e2f95dbad2);
+        
+    
+        var popup_6b9ce62f2fe2c7e49d785fb263c3d10a = L.popup({
+  "maxWidth": 400,
+});
+
+        
+            
+                var html_acad50aff889cebbd3808e0025ada412 = $(`<div id="html_acad50aff889cebbd3808e0025ada412" style="width: 100.0%; height: 100.0%;">         <div style="font-family: Arial; width: 350px;">         <h4 style="margin: 0 0 10px 0;">Ward_40 - Lonand</h4>         <hr style="margin: 5px 0;">         <b>Stress Assessment:</b><br>         Stress Zone: <span style="color: #f39c12; font-weight: bold;">Medium Stress</span><br>         ESI Score: <b>0.393</b> (0-1 scale)<br>         <hr style="margin: 5px 0;">                  <b>Environmental Indicators:</b><br>         PM2.5: <b>51.7</b> µg/m³ (WHO limit: 35)<br>         Temperature: <b>26.7</b>°C<br>         Population Density: <b>6608</b> persons/km²<br>         Green Cover: <b>12.0%</b><br>         Vulnerable Population: <b>36.2%</b><br>         <hr style="margin: 5px 0;">                  <b>Geographic Location:</b><br>         Area: <b>Lonand</b><br>         Population: <b>50,000</b><br>         Distance from City Center: <b>38.0 km</b><br>         Coordinates: (18.7150°N, 73.8000°E)<br>         <hr style="margin: 5px 0;">                  <b>Budget Allocation (3 Years):</b><br>         <span style="background: #e8f5e9; padding: 8px; display: block; margin: 5px 0; border-radius: 3px;">         Total: <b>₹8.06 Lakhs</b><br>         <span style="font-size: 0.9em;">         • Green Infrastructure: ₹2.82L<br>         • Pollution Control: ₹2.42L<br>         • Health Monitoring: ₹1.61L<br>         • Research: ₹1.21L         </span>         </span>         </div>         </div>`)[0];
+                popup_6b9ce62f2fe2c7e49d785fb263c3d10a.setContent(html_acad50aff889cebbd3808e0025ada412);
+            
+        
+
+        circle_marker_819e5d1b2c8c2095893c651a1d4f03d3.bindPopup(popup_6b9ce62f2fe2c7e49d785fb263c3d10a)
+        ;
+
+        
+    
+    
+            circle_marker_819e5d1b2c8c2095893c651a1d4f03d3.bindTooltip(
+                `<div>
+                     Ward_40 (Medium Stress, ESI: 0.393)
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+            var circle_marker_f8abeb2930a8af9ee82e8c3771934b19 = L.circleMarker(
+                [18.595, 73.58],
+                {"bubblingMouseEvents": true, "color": "#2ecc71", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#2ecc71", "fillOpacity": 0.8, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 0.9, "radius": 16.00222473707228, "stroke": true, "weight": 2}
+            ).addTo(map_d561194b256c254ed5cbe7e2f95dbad2);
+        
+    
+        var popup_b96504cabf9e1d3a226dbc6741d6309d = L.popup({
+  "maxWidth": 400,
+});
+
+        
+            
+                var html_c5b6062b20628ba8e4e7b1dcdc2eb6f8 = $(`<div id="html_c5b6062b20628ba8e4e7b1dcdc2eb6f8" style="width: 100.0%; height: 100.0%;">         <div style="font-family: Arial; width: 350px;">         <h4 style="margin: 0 0 10px 0;">Ward_41 - Velha East</h4>         <hr style="margin: 5px 0;">         <b>Stress Assessment:</b><br>         Stress Zone: <span style="color: #2ecc71; font-weight: bold;">Low Stress</span><br>         ESI Score: <b>0.400</b> (0-1 scale)<br>         <hr style="margin: 5px 0;">                  <b>Environmental Indicators:</b><br>         PM2.5: <b>60.4</b> µg/m³ (WHO limit: 35)<br>         Temperature: <b>31.3</b>°C<br>         Population Density: <b>1745</b> persons/km²<br>         Green Cover: <b>25.8%</b><br>         Vulnerable Population: <b>28.7%</b><br>         <hr style="margin: 5px 0;">                  <b>Geographic Location:</b><br>         Area: <b>Velha East</b><br>         Population: <b>13,000</b><br>         Distance from City Center: <b>52.0 km</b><br>         Coordinates: (18.5950°N, 73.5800°E)<br>         <hr style="margin: 5px 0;">                  <b>Budget Allocation (3 Years):</b><br>         <span style="background: #e8f5e9; padding: 8px; display: block; margin: 5px 0; border-radius: 3px;">         Total: <b>₹0.58 Lakhs</b><br>         <span style="font-size: 0.9em;">         • Green Infrastructure: ₹0.17L<br>         • Pollution Control: ₹0.12L<br>         • Health Monitoring: ₹0.17L<br>         • Research: ₹0.12L         </span>         </span>         </div>         </div>`)[0];
+                popup_b96504cabf9e1d3a226dbc6741d6309d.setContent(html_c5b6062b20628ba8e4e7b1dcdc2eb6f8);
+            
+        
+
+        circle_marker_f8abeb2930a8af9ee82e8c3771934b19.bindPopup(popup_b96504cabf9e1d3a226dbc6741d6309d)
+        ;
+
+        
+    
+    
+            circle_marker_f8abeb2930a8af9ee82e8c3771934b19.bindTooltip(
+                `<div>
+                     Ward_41 (Low Stress, ESI: 0.400)
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+            var marker_a529dac381d68f3e4aaf6517aa5dafca = L.marker(
+                [18.5204, 73.8567],
+                {
+}
+            ).addTo(map_d561194b256c254ed5cbe7e2f95dbad2);
+        
+    
+            var icon_499f8df123abf69ff6fed752f6c3e56b = L.AwesomeMarkers.icon(
+                {
+  "markerColor": "blue",
+  "iconColor": "white",
+  "icon": "info-sign",
+  "prefix": "glyphicon",
+  "extraClasses": "fa-rotate-0",
+}
+            );
+        
+    
+        var popup_5dd2f230a19d6b6a8c08d898e679d5a2 = L.popup({
+  "maxWidth": "100%",
+});
+
+        
+            
+                var html_d525c8d4a4f5ecc1932896a40ad607f2 = $(`<div id="html_d525c8d4a4f5ecc1932896a40ad607f2" style="width: 100.0%; height: 100.0%;">Pune City Center</div>`)[0];
+                popup_5dd2f230a19d6b6a8c08d898e679d5a2.setContent(html_d525c8d4a4f5ecc1932896a40ad607f2);
+            
+        
+
+        marker_a529dac381d68f3e4aaf6517aa5dafca.bindPopup(popup_5dd2f230a19d6b6a8c08d898e679d5a2)
+        ;
+
+        
+    
+    
+                marker_a529dac381d68f3e4aaf6517aa5dafca.setIcon(icon_499f8df123abf69ff6fed752f6c3e56b);
+            
+</script>
+</html>
